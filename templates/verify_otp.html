@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-section mb-60">
+    <div class="container">
+    <div class="row d-flex justify-content-center text-center">
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
+                <div class="center-div">
+                            <!-- Login Form -->
+                            <form  method="post" action="">
+                                {% csrf_token %}
+                                {{ form.as_p}}
+                                <div class="login-form">
+                                    <h4 class="login-title">OTP</h4>
+                                    
+                                        <div class="col-12 mb-20">
+                                            <label>Enter the OTP</label>
+                                            <input class="mb-0" type="number" placeholder="otp" name = "otp" id = "password" required>
+                                        </div>
+                                       
+                                        
+                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                            <button type="submit" class="register-button mt-0">verify</button>
+                                          </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                       </div>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Begin Login Content Area -->
+<div class="page-section mb-60" >
+    <div class="container">
+        <div class="row" >
+            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
+               
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                <form action="" method ="post">
+                    {% csrf_token %} 
+                    {{ forms.as_p}}
+                    <div class="login-form">
+                        <h4 class="login-title">Register</h4>
+                        <div class="row">
+                            <div class="col-md-6 col-12 mb-20">
+                                <label>Username</label>
+                                <input class="mb-0" type="text" placeholder="User Name " name = "username" id ="Username" required>
+                            </div>
+                            <div class="col-md-6 col-12 mb-20">
+                                <label>Mobile Number</label>
+                                <input class="mb-0" type="text" placeholder="Mobile Number" name = "mobilenumber" id = "Mobilenumber" required>
+                            </div>
+                            <div class="col-md-12 mb-20">
+                                <label>Email Address*</label>
+                                <input class="mb-0" type="email" placeholder="Email Address" name = "email" id = "Email" required>
+                            </div>
+                            <div class="col-md-6 mb-20">
+                                <label>Password</label>
+                                <input class="mb-0" type="password" placeholder="Password" name = "password1" id ="Password1" required>
+                            </div>
+                            <div class="col-md-6 mb-20">
+                                <label>Confirm Password</label>
+                                <input class="mb-0" type="password" placeholder="Confirm Password" name = "password2" id ="Password2" required>
+                            </div>
+                            {% for field in registration_form %}
+                            <p>
+                                {% for error in field.errors %}
+                                <p style = "color: red">{{error}}</p>
+                                {% endfor %}
+                            </p>
+                            {% endfor %}
+                            {% if registration_form.non_field_errors %}
+                            <div style="color: red">
+                                <p>{{registration_form.non_field_errors}}</p>
+                            </div>
+                            {% endif %}
+                            <div class="col-12">
+                                <button type = "submit" class="register-button mt-0" >Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

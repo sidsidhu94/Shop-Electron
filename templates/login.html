@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+            <!-- Begin Login Content Area -->
+            <div class="page-section mb-60">
+                <div class="container">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
+                            <div class="center-div">
+                                        <!-- Login Form -->
+                                        <form  method="post" action="">
+                                            {% csrf_token %}
+                                            {{ form.as_p}}
+                                            <div class="login-form">
+                                                <h4 class="login-title">Login</h4>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-12 mb-20">
+                                                        <label>Email Address*</label>
+                                                        <input class="mb-0" type="email" placeholder="Email Address" name = "email" id ="email" required>
+                                                    </div>
+                                                    <div class="col-12 mb-20">
+                                                        <label>Password</label>
+                                                        <input class="mb-0" type="password" placeholder="Password" name = "password" id = "password" required>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="check-box d-inline-block ml-0 ml-md-2 mt-10">
+                                                            <a href="#"> Forgot password?</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mt-10 mb-20 text-left text-md-right">
+                                                        <a href="{% url 'register' %}"> Register here</a>
+                                                    </div>
+                                                    {% for field in login_form %}
+                                                    <p>
+                                                        {% for error in field.errors %}
+                                                        <p style="color: red">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </p>
+                                                    {% endfor %}
+                                                    {% if login_form.non_field_errors %}
+                                                    <div style="color: red">
+                                                        <p>{{login_form.non_field_errors}}</p>
+                                                    </div>
+                                                    {% endif %}
+                                                    <div class="col-md-12">
+                                                        <button type="submit" class="register-button mt-0">Login</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
+                                   </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+{% endblock %}
+  
