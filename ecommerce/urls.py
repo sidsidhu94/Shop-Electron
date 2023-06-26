@@ -11,17 +11,25 @@ Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
-    1. Import the include() function: from django.urls import include, path
+    1. Import the include() function: from django.urls import include, pathcl
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
 from django.urls import path,include
 
+
 from django.conf import settings
 from django.conf.urls.static import static
+
 urlpatterns = [
     path('og-admin/', admin.site.urls),
     path('',include('registration.urls')),
+    path('admin/',include('adminapp.urls')),
+    path('cart/', include(('cart.urls'))),
+    path('checkout/', include(('checkout.urls'))),
+    path('profile/',include('userprofile.urls')),
+    path('wishlist/',include('wishlist.urls')),
+
    
 
 ]

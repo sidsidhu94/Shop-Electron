@@ -428,6 +428,7 @@
                                             <th scope="col">Status</th> -->
                                             <th scope="col">PRICE</th>
                                             <th scope="col">QUANTITY</th>
+                                            <th scope="col">EDIT</th>
                                             <th scope="col">ACTION</th>
                                         </tr>
                                     </thead>
@@ -441,7 +442,21 @@
                                             <td>{{ variant.price }}</td>
                                             <td>{{ variant.quantity }}</td>
                                             <td></td>
-                                           
+                                            <td>
+                                                {% if variants.is_listed %}
+                                                    <form action="{% url 'unlist_variants' variant.uid %}" method="post">
+                                                        {% csrf_token %}
+                                                        <!-- <button type="submit" style="color: red;">Unlist</button> -->
+                                                        <button type="submit" style="color: red;">unList</button>
+                                                    </form>
+                                                {% else %}
+                                                    <form action="{% url 'list_variants' variant.uid %}" method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" style="color: green;">List</button>
+                                                    </form>
+                                                {% endif %}
+                                            </td>
+                                            
                                         </tr>
                                         {% endfor %}
                                     </tbody>

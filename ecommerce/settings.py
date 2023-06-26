@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2xaynch8l#i4pb)99l517$s2ab8=f@#njm==889y!tifa0xp#e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True 
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     #....MY APPS....#
     'registration',
     'products',
+    'adminapp',
+    'cart',
+    'checkout',
+    'userprofile',
+    'wishlist',
 
     #....THIRD PARTY APPS....#
     'django.contrib.admin',

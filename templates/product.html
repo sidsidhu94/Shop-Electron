@@ -451,16 +451,14 @@
                                                 {% endif %}
 
                                                 <td>
-                                                    {% if i.is_listed %}
-                                                        <form action="#" method="POST">
+                                                    {% if product.is_listed %}
+                                                        <form action="{% url 'unlist_product' product.uid %}" method="post">
                                                             {% csrf_token %}
-                                                            <input type="hidden" name="product_id" value="{{ i.id }}">
                                                             <button type="submit" style="color: red;">Unlist</button>
                                                         </form>
                                                     {% else %}
-                                                        <form action="" method="POST">
+                                                        <form action="{% url 'list_product' product.uid %}" method="post">
                                                             {% csrf_token %}
-                                                            <input type="hidden" name="product_id" value="{{ i.id }}">
                                                             <button type="submit" style="color: green;">List</button>
                                                         </form>
                                                     {% endif %}

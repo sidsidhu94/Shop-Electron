@@ -27,8 +27,11 @@ admin.site.register(Category)
 
 admin.site.register(Product)
 
-admin.site.register(ProductImage)
+admin.site.register(VariantImage)
 
 admin.site.register(Color)
 admin.site.register(Storage)
 admin.site.register(Variant)
+admin.site.register(Brand)
+
+
