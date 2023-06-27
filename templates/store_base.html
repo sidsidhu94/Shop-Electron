@@ -108,8 +108,9 @@
                         </button>
                         
                         <a href="{% url 'home' %}" class="logo">
-                            <!-- <img src="{% static 'store/assets/images/demos/demo-4/logo.png' %}" alt="Molla Logo" width="105" height="25"> -->
-                            <h3 style="color: rgb(36, 137, 150);">Shop@Electron</h3>
+                            
+                            <img src="{% static 'store/assets/images/demos/demo-4/logo.png' %}" alt="Molla Logo" width="155" height="15">
+                            <!-- <h3 style="color: rgb(36, 137, 150);">Shop@Electron</h3> -->
                         </a>
                     </div><!-- End .header-left -->
 
@@ -143,54 +144,37 @@
                             <a href="{% url 'cart' %}" class="dropdown-toggle"  aria-expanded="false" data-display="static">
                                 <div class="icon">
                                     <i class="icon-shopping-cart"></i>
-                                    <span class="cart-count">2</span>
+                                    <span class="cart-count">{{ cart.get_cart_items }}</span>
                                 </div>
                                 <p>Cart</p>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right">
+                                {% for cart_item in cart_items %}
                                 <div class="dropdown-cart-products">
                                     <div class="product">
                                         <div class="product-cart-details">
                                             <h4 class="product-title">
-                                                <a href="product.html">Beige knitted elastic runner shoes</a>
+                                                <a href="product.html">{{ cart_item.variant.product.Product_name }}</a>
                                             </h4>
 
                                             <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $84.00
+                                                <span class="cart-product-qty">{{ cart_item.variant_quantity }}</span>
+                                                X ₹{{ cart_item.variant.price }}
                                             </span>
                                         </div><!-- End .product-cart-details -->
 
                                         <figure class="product-image-container">
                                             <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-1.jpg" alt="product">
+                                                <img src="{{cart_item.variant.variantimages.first.image.url}}" alt="product">
                                             </a>
                                         </figure>
                                         <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
                                     </div><!-- End .product -->
-
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Blue utility pinafore denim dress</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $76.00
-                                            </span>
-                                        </div><!-- End .product-cart-details -->
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-2.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div><!-- End .product -->
+                                    
+                                    
                                 </div><!-- End .cart-product -->
-
+                                {% endfor %}
                                 <div class="dropdown-cart-total">
                                     <span>Total</span>
 

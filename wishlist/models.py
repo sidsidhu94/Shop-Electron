@@ -2,15 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 from products.models import Variant
 from registration.models import *
-
+from base.models import BaseModel
 
 # Create your models here.
 
-class WishlistItem(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
+class Wishlist(models.Model):
+    user  = models.ForeignKey(Account ,  on_delete=models.CASCADE,related_name= "wishlist")
 
-    def __str__(self):
-        return f'{self.user.username} - {self.variant.name}'
+
+
+
+class WishlistItem(models.Model):
+    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE,related_name="wishlist_items",blank= True, null = True)
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE,null = True,blank=True)
+   

@@ -63,3 +63,15 @@ class Account(AbstractBaseUser):
 
     # def get_cart_count(self):
     #     return Cartitems.objects.filter(cart__is_paid= False,cart__user = self.user).count()
+
+class Profile(models.Model):
+    user =  models.OneToOneField(Account, on_delete=models.CASCADE)
+    forgot_password_token = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+    # def str(self):
+    #     return self.user.username 

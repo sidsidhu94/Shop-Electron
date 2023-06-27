@@ -9,6 +9,7 @@ class Address(models.Model):
     address                     = models.CharField(max_length=50, null = False, blank = False)
     district                    = models.CharField(max_length=50, null = False, blank = False)
     state                       = models.CharField(max_length=50, null = False, blank = False)
+    # country                     = models.CharField(max_length=50, null = False, blank = False)
     pincode                     = models.BigIntegerField(null = False, blank = False)
     mobile                      = models.BigIntegerField(null = False, blank = False)
     

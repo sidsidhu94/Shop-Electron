@@ -17,7 +17,7 @@ class Cart(BaseModel):
     
     @property
     def get_cart_items(self):
-        cartitems = self.cartitems_set.all()
+        cartitems = self.cart_items.all()
         total     = sum([item.variant_quantity for item in cartitems])
         return total
 
@@ -31,35 +31,4 @@ class Cartitems(BaseModel):
         return self.variant.price * self.variant_quantity
     
 
-    # def get_total(self):
-    #     return self.product.product_price * self.product_qty
-
-
-
-
-        # def get_product_total(self):
-    #     cart_items = self.cart_items.all()
-    #     price = []
-
-    #     for cart_items in cart_items:
-
-        
-    #         if cart_items.variant:
-    #             variant_price = cart_items.variant
-    #             price.append(variant_price)
-    #     return sum(price)
-
-    # def __str__(self):
-    #     return str(self.uid)
     
-    # def cart_total(self):
-    #     cartitems =self.cartitems_set.all()
-    #     total = sum(item.get_total for item in cartitems)
-    #     return total
-
-    # def get_cart_items(self):
-    #     cartitems = self.cartitem_set.all()
-    #     total     = sum([item.variant_quantity for item in cartitems])
-    #     return total
-
-   

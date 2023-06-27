@@ -1,34 +1,75 @@
-{% extends 'base.html' %}
+{% extends "store_base.html" %}
 
 {% block content %}
-<div class="page-section mb-60">
-    <div class="container">
-    <div class="row d-flex justify-content-center text-center">
-            <div class="col-sm-12 col-md-12 col-xs-12 col-lg-6 mb-30">
-                <div class="center-div">
-                            <!-- Login Form -->
-                            <form  method="post" action="">
+
+<main class="main">
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" >OTP VERIFY</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                            <form action="#" method="post"> 
                                 {% csrf_token %}
                                 {{ form.as_p}}
-                                <div class="login-form">
-                                    <h4 class="login-title">OTP</h4>
+                                <!-- <div class="form-group">
+                                    <label for="singin-email-2">Username or email address *</label>
+                                    <input type="text" class="form-control" id="singin-email-2" name="email" required>
+                                </div>End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="singin-password-2">otp *</label>
+                                    <input type="otp" class="form-control" id="singin-password-2" name="otp" required>
+                                </div><!-- End .form-group -->
+                                {% for field in login_form %}
+                                <p>
+                                {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                                {% endfor %}
+                                </p>
+                                {% endfor %}
+                                {% if login_form.non_field_errors %}
+                                <div style="color: red">
+                                <p>{{login_form.non_field_errors}}</p>
+                                </div>
+
+                                {% endif %}
+
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>VERIFY</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
+
                                     
-                                        <div class="col-12 mb-20">
-                                            <label>Enter the OTP</label>
-                                            <input class="mb-0" type="number" placeholder="otp" name = "otp" id = "password" required>
-                                        </div>
-                                       
-                                        
-                                        <div style="display: flex; justify-content: center; align-items: center;">
-                                            <button type="submit" class="register-button mt-0">verify</button>
-                                          </div>
+                            </form>
+                            
+                            </div><!-- End .form-choice -->
+
+                            <!-- <div class="form-choice text-center"> 
+                                <br>
+                                <p class="">New here?</p>
+                                <div class="row justify-content-center"> 
+                                    <div class="col-sm-6">
+                                        <a href="">
+                                        <button type="submit" class="btn btn-outline-primary-2">
+                                            <span>Sign Up</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+                                        </a>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="col-sm-12 col-md-12 col-lg-6 col-xs-12">
-                       </div>
-                    </div>
-                </div>
-            </div>
-{% endblock %}
+                            </div> -->
+                                                        
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+</main><!-- End .main -->
+
+{% endblock content %}

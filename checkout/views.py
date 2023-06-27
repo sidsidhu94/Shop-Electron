@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from cart.models import *
 from products.models import *
 from userprofile.models import *
-
+from .models import Address, Order
 
 # Create your views here.
 
@@ -28,6 +28,7 @@ from userprofile.models import *
 
 def checkout(request):
     cart = Cart.objects.filter(user=request.user).first()
+    addresses = Address.objects.filter(user_id = request.user)
     if cart and cart.cart_items.exists() and cart.cart_items.first().variant.quantity < cart.cart_items.first().variant_quantity:
         # Handle the case where the variant quantity is less than the cart item quantity
         cart.cart_items.first().delete()
@@ -35,12 +36,8 @@ def checkout(request):
     cart_items = cart.cart_items.all()
     total_price = sum(item.variant.price * item.variant_quantity for item in cart_items)
 
-    context = {
-        'cart_items': cart_items,
-        'total_price': total_price,
-    }
-
-    return render(request, "checkout.html", context)
+    
+    return render(request, "checkout.html", locals())
 
 
 
@@ -48,7 +45,7 @@ def checkout(request):
 def add_address(request):
     if request.method == 'POST':
         user_id = request.POST.get('user_id')  
-        fullname = request.POST.get('fullname')
+        name = request.POST.get('name')
         address = request.POST.get('address')
         district = request.POST.get('district')
         state = request.POST.get('state')
@@ -57,7 +54,7 @@ def add_address(request):
 
         address_obj = Address(
             user_id=user_id,
-            fullname=fullname,
+            name=name,
             address=address,
             District=district,
             state=state,
@@ -69,7 +66,21 @@ def add_address(request):
         return redirect('profile')  
 
     return render(request, 'checkout.html')
+ 
+ 
 
+def placeorder(request):
+    if request.method == "POST":
+        neworder = Order()
+        neworder.user = request.user
+        neworder.address = Address()
+        neworder.payment_mode = request.POST.get()
+
+        return redirect('checkout')
+
+# def add_address(request):
+
+#     return render(request ,'add_address.html')
 
 
 # def address(request):

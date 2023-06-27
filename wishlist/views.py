@@ -1,36 +1,34 @@
 from django.shortcuts import render,redirect
 from .models import *
+from cart.models import *
+from django.contrib import messages
+
 
 # Create your views here.
 def wishlist(request):
-    # user = request.user
-    # wishlist_items = WishlistItem.objects.filter(user=user)
+    user = request.user
+    wishlist = Wishlist.objects.filter(user = user).first()
+    wishlist_item = WishlistItem.objects.filter(wishlist=wishlist)
+    print(wishlist,"################################")
     
-    # context = {
-    #     'wishlist_items': wishlist_items
-    # }
+    context = {
+        'wishlist_item': wishlist_item
+        
+    }
     
-    return render(request, 'wishlist.html')
+    return render(request, 'wishlist.html',context)
  
 
+def add_to_wishlist(request, variant_id):
+    variant = Variant.objects.get(uid=variant_id)
+    user = request.user
+    wishlist, created = Wishlist.objects.get_or_create(user=user)
 
-# def wishlist(request):
-#     user = request.user
-#     wishlist_items = WishlistItem.objects.filter(user=user)
-    
-#     # Handle adding a product to the wishlist
-#     if request.method == 'POST':
-#         product_id = request.POST.get('product_id')
-#         product = Product.objects.get(id=product_id)
-        
-#         # Check if the product is already in the wishlist
-#         if not WishlistItem.objects.filter(user=user, product=product).exists():
-#             wishlist_item = WishlistItem(user=user, product=product)
-#             wishlist_item.save()
-    
-#     context = {
-#         'wishlist_items': wishlist_items
-#     }
-    
-#     return render(request, 'wishlist.html', context)
+    wishlist_item = WishlistItem.objects.filter(wishlist=wishlist, variant=variant)
 
+    if wishlist_item.exists():
+        messages.info(request, 'This product already exists in your wishlist.')
+    else:
+        wishlist_item = WishlistItem.objects.create(wishlist=wishlist, variant=variant)
+
+    return redirect('shop')
