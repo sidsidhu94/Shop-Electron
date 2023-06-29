@@ -161,3 +161,10 @@ EMAIL_PORT = os.getenv('EMAIL_PORT','587')
 EMAIL_HOST_USER = os.getenv('electronshop409@gmail.com')
 EMAIL_HOST_PASSWORD = os.getenv('awuftnbvslyljwys')
 EMAIL_USE_TLS = True
+
+
+
+############ RAZOR PAY ############
+
+KEY  = 'rzp_test_Uariryi2s2u5dv'
+SECRET_KEY = 'rkS3FvZypoawRTL4FGnsGILi'

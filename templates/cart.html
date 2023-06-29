@@ -1,7 +1,9 @@
+
 {% extends "store_base.html" %}
 
 {% block content %}
-
+{% load static  %}
+{% if cartitems %}
 <main class="main">
     <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         <div class="container">
@@ -69,7 +71,7 @@
                                 {% endfor %}
                             </tbody>
                         </table><!-- End .table table-wishlist -->
-
+                        
                         <div class="cart-bottom">
                             <div class="cart-discount">
                                 <form action="#">
@@ -106,38 +108,40 @@
 
                                     <tr class="summary-shipping-row">
                                         <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
+                                            <div class="">
+                                                <!-- <input type="radio" id="free-shipping" name="shipping" class="custom-control-input"> -->
                                                 <label class="custom-control-label" for="free-shipping">Free Shipping</label>
                                             </div><!-- End .custom-control -->
                                         </td>
-                                        <td>$0.00</td>
+                                        <td>₹0.00</td>
                                     </tr><!-- End .summary-shipping-row -->
 
-                                    <tr class="summary-shipping-row">
+                                    <!-- <tr class="summary-shipping-row">
                                         <td>
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
                                                 <label class="custom-control-label" for="standart-shipping">Standart:</label>
-                                            </div><!-- End .custom-control -->
+                                            </div>
                                         </td>
                                         <td>$10.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
+                                    </tr>
 
                                     <tr class="summary-shipping-row">
                                         <td>
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
                                                 <label class="custom-control-label" for="express-shipping">Express:</label>
-                                            </div><!-- End .custom-control -->
+                                            </div>
                                         </td>
                                         <td>$20.00</td>
-                                    </tr><!-- End .summary-shipping-row -->
+                                    </tr> -->
+                                    <!-- End .summary-shipping-row -->
 
-                                    <tr class="summary-shipping-estimate">
+                                    <!-- <tr class="summary-shipping-estimate">
                                         <td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
-                                        <td>&nbsp;</td>
-                                    </tr><!-- End .summary-shipping-estimate -->
+                                        <td>&nbsp;</td> -->
+                                    <!-- </tr> -->
+                                    <!-- End .summary-shipping-estimate -->
 
                                     <tr class="summary-total">
                                         <td>Total:</td>
@@ -145,12 +149,17 @@
                                     </tr><!-- End .summary-total -->
                                 </tbody>
                             </table><!-- End .table table-summary -->
+                            
+                                <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+                            
+                            <!-- <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a> -->
+                        </div>
+                        {% else %}
+                        <img  src="{% static 'store/assets/images/demos/demo-4/final.png' %}" style="height: 350px; width: 35%; position: relative;left: 43rem;" alt="">
+                        {% endif %}
 
-                            <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
-                        </div><!-- End .summary -->
-
-                        <a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
-                    </aside><!-- End .col-lg-3 -->
+                        <a href="{% url 'shop' %}" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+                    </aside><!-- End  .col-lg-3 -->
                 </div><!-- End .row -->
             </div><!-- End .container -->
         </div><!-- End .cart -->

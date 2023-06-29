@@ -30,21 +30,21 @@
                 
                 
                 <!-- End .col-lg-6 -->
-                <form action="#" >
-                    
+                <form action="{% url 'placeorder' %}" method="post">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col-lg-8">
                             <div class="card card-dashboard">
                                 <div class="card-body">
                                     <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
                                     {% for addr in addresses %}
-                                    <input type="radio" name="selection" id="radio-btn" value="1">
+                                    <input type="radio" name="selection" id="radio-btn" value="{{ addr.id }}" required>
                                     <label for="radio-btn">Select Billing Address</label>
                                      
                                     <p id="address-details">
                                         {{ addr.fullname }}<br>
                                         {{ addr.address }}<br>
-                                        {{ addr.district }}, {{ addr.state }} <br>
+                                        {{ addr.district }},  {{ addr.state }} <br>
                                         {{ addr.pincode }}<br>
                                         {{ addr.mobile }}<br>
                                         {{ addr.email }}<br>
@@ -110,71 +110,42 @@
                                     </tbody>
                                 </table><!-- End .table table-summary -->
 
-                                <div class="accordion-summary" id="accordion-payment">
-                                    <div class="card">
-                                        <div class="card-header" id="heading-1">
-                                            <h2 class="card-title">
-                                                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                                                    Direct bank transfer
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-2">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                                                    Check payments
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. 
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-3">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                    Cash on delivery
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-                                            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
-                                            </div>
-                                        </div>
-                                    </div><!-- End .card -->
-
+                                <div class="accordion-summary" id="accordion-payment" required>
                                     
 
                                     <div class="card">
-                                        <div class="card-header" id="heading-5">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                                    Credit Card (Stripe)
-                                                    <img src="assets/images/payments-summary.png" alt="payments cards">
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-                                            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-                                </div><!-- End .accordion -->
+                                        
+
+                                        <div class="card">
+                                            <div class="card-header" id="heading-3">
+                                                <h2 class="card-title">
+                                                    <input type="radio" name="payment_mode" value="cod" id="cod-razorpay" checked>
+                                                    <label for="cod-razorpay">COD</label>
+                                                </h2>
+                                            </div><!-- End .card-header -->
+                                            <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                                <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
+                                                </div>
+                                            </div>
+                                        </div><!-- End .card -->
+                                        
+                                        <div class="card">
+                                            <div class="card-header" style="margin-top: 20px;" id="heading-5">
+                                                <h2 class="card-title ">
+                                                    <input type="radio" name="payment_mode" value="razorpay" id="rzp-button1" >
+                                                    <label for="cod-razorpay">Razor Pay</label>
+                                                </h2>
+                                            </div><!-- End .card-header -->
+                                            <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                                <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+                                                </div>
+                                            </div>
+                                        </div><!-- End .card -->
+                                        
+                                </div>
                                 
 
-                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" style="margin-top: 20px;">
                                     <span class="btn-text">Place Order</span>
                                     <span class="btn-hover-text">Proceed to Checkout</span>
                                 </button>
@@ -188,5 +159,45 @@
 </main><!-- End .main -->
 
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+        "key": "rzp_test_Uariryi2s2u5dv", // Enter the Key ID generated from the Dashboard
+        "amount": payment['amount'], // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "shop electron",
+        "description": "Purchase payment",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature)
+        },
+        
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+    </script>
 
 {% endblock content %}
+
+
+
+  
