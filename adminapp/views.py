@@ -4,6 +4,7 @@ from django.contrib.auth import login,authenticate, logout
 from registration.forms import RegistrationForm,AccountAuthenticationForm
 from django.contrib import messages
 from registration.models import Account
+from checkout.models import Order
 from products.models import *
 from django.core.exceptions import ValidationError
 # from django.contrib.auth.models import User
@@ -415,3 +416,26 @@ def search(request):
         "query": query,
     }
     return render(request, 'user.html', context)
+
+
+ ######################### ORDERS  ######################### 
+
+def admin_orders(request):
+    admin_orders = Order.objects.prefetch_related('orderitem_set').all().order_by('id')
+    context = {
+        'admin_orders':admin_orders
+    }
+    return render(request,'admin_order.html', context)
+
+def update_orders(request,id):
+    if request.method == 'POST':
+        
+        status = request.POST['status']
+
+        order = Order.objects.get(id = id)
+
+        order.status = status
+        order.save()
+        return redirect('admin_orders')
+
+

@@ -100,7 +100,7 @@
                             <a href="{% url 'add_storage' %}" class="dropdown-item">Add Storage</a>
                         </div>
                     </div>
-                    <a href="{% url 'user' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>ORDERS</a>
+                    <a href="{% url 'admin_orders' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>ORDERS</a>
                 </div>
             </nav>
         </div>
@@ -117,8 +117,9 @@
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control border-0" type="search" placeholder="Search">
+                <form class="d-none d-md-flex ms-4" method="GET" action="{% url 'search' %}">
+                    <input class="form-control border-0" type="search" name="q" placeholder="Search">
+                    <button class="btn btn-primary" type="submit">Search</button>
                 </form>
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
@@ -192,7 +193,7 @@
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
-                            <a href="{% url 'admin_logout' %}" class="dropdown-item">Log Out</a>
+                            <a href="#" class="dropdown-item">Log Out</a>
                         </div>
                     </div>
                 </div>
@@ -415,55 +416,91 @@
                     </div> -->
                     <div class="col-12 mt-5 ml-3">
                         <div class="bg-light rounded h-100 p-4">
-                            <h6 class="mb-4">VARIANTS</h6>
+                            <h6 class="mb-4">ORDER DETAILS</h6>
                             <div class="table-responsive">
                                 
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th scope="col">SL NO</th>
-                                            <th scope="col">PRODUCT </th>
-                                            <th scope="col">COLOR</th>
-                                            <!-- <th scope="col">MOBILE</th> -->
-                                            <th scope="col">STORAGE</th>
+                                            <th scope="col">ORDER ID</th>
+                                            <th scope="col">PRODUCT</th>
+                                            <th scope="col">AMOUNT</th>
+                                            <th scope="col">ORDERED QUANTITY</th>
+                                            <th scope="col">PAYMENT TYPE</th>
+                                            
+                                            <th scope="col">ORDER STATUS</th>
+                                            <th scope="col">ORDER STATUS</th>
                                             <!-- <th scope="col">ZIP</th>
                                             <th scope="col">Status</th> -->
-                                            <th scope="col">PRICE</th>
-                                            <th scope="col">QUANTITY</th>
-                                            <th scope="col">EDIT</th>
-                                            <th scope="col">ACTION</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for variant in variants %}
+                                        {% for order in admin_orders %}
                                         <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td>{{ variant.product }}</td>
-                                            <td>{{ variant.color.color_name }}</td>
-                                            <td>{{ variant.storage.memory }}</td>
-                                            <td>{{ variant.price }}</td>
-                                            <td>{{ variant.quantity }}</td>
-                                            <td></td>
-                                            <td>
-                                                {% if variants.is_listed %}
-                                                    <form action="{% url 'unlist_variants' variant.uid %}" method="post">
-                                                        {% csrf_token %}
-                                                        <!-- <button type="submit" style="color: red;">Unlist</button> -->
-                                                        <button type="submit" style="color: red;">unList</button>
-                                                    </form>
-                                                {% else %}
-                                                    <form action="{% url 'list_variants' variant.uid %}" method="post">
-                                                        {% csrf_token %}
-                                                        <button type="submit" style="color: green;">List</button>
-                                                    </form>
-                                                {% endif %}
-                                            </td>
+                                          <td>{{ forloop.counter }}</td>
+                                          <td>{{ order.id }}</td>
+                                          {% for order_item in order.orderitem_set.all %}
+                                            <td>{{ order_item.variant }}</td>
                                             
+                                          
+                                          
+                                          <td>{{ order_item.price }}</td>
+                                          <td>{{ order_item.order_quantity }}</td>
+                                          {% endfor %}
+                                          
+                                          <td>{{ order.payment_mode }}</td>
+                                          <td>{{ order.status }}</td>
+                                          <td>
+                                            <form action="{% url 'update_orders' order.id %}" method="post">
+                                              {% csrf_token %}
+                                              <div class="">
+                                                <select name="status" >
+                                                <option value="">{{order.status}}</option>
+                                                 <option value="Pending">Pending</option>
+                                                 <option value="Out for Shipping">Out for Shipping</option>
+                                                 <option value="Out for Delivery">Out for Delivery</option>
+                                                 <option value="Delivered">Delivered</option>
+                                                </select>
+                                                 </div>
+                                        </td>
+                                        <td >
+                            
+                                            <div class="d-flex justify-content-center">
+                
+                
+                
+                                                <div class="modal fade" id="statuschange{{order.id}}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                                                  <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel{{order.id}}">Change status</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                
+                                                        <p> Are you sure about Changing the status of the order. <br></p>
+                                                        <h4><button  class="btn btn-primary">Yes</button></h4>
+                                                      </form>
+                                
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                {% if order.status == 'Delivered' or order.status == 'Cancelled' %}
+                                                {% else %}
+                                                <button class="btn btn-primary ml-2" data-bs-target="#statuschange{{order.id}}" data-bs-toggle="modal">Submit</button>
+                                                {% endif %}
+                                            </div> 
+                                          
+                
+                                        </td> 
+                                          <!-- <td>{{ order.zip }}</td>
+                                          <td>{{ order.status }}</td> -->
                                         </tr>
                                         {% endfor %}
-                                    </tbody>
-                                   
-                                    
+                                      </tbody>
+
                                 </table>
                             </div>
                         </div>
@@ -471,18 +508,58 @@
                 </div>
             </div>
             <!-- Table End -->
+            
+       <!-- Pagination -->
+            <div class="clearfix">
+                <div class="hint-text">
+                    Showing <b>{{ users.number|add:'1' }}</b> out of <b>{{ users.paginator.count }}</b> entries
+                </div>
+                <ul class="pagination">
+                    {% if users.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ users.previous_page_number }}" class="page-link">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    {% endif %}
 
+                    {% for page in users.paginator.page_range %}
+                        {% if users.number == page %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ page }}" class="page-link">{{ page }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if users.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{ users.next_page_number }}" class="page-link">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+                        
 
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Your Site Name</a>, All Right Reserved. 
+                            &copy; <a href="#">Shop@Elecron</a>, All Right Reserved. 
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
+                            Designed By <a href="#">HTML Codex</a>
                         </div>
                     </div>
                 </div>

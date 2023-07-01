@@ -49,6 +49,12 @@ urlpatterns = [
   path('add_storage/',views.add_storage, name = 'add_storage'),
   path('storage/',views.storage, name = 'storage'),
 
+
+    ##..........storage side..........##   
+
+  path('admin_orders/',views.admin_orders, name = 'admin_orders'),
+  path('update_orders/<int:id>/',views.update_orders,name='update_orders'),
+
     ##..........search side..........##   
   path('search/',views.search,name='search'),
 

@@ -6,6 +6,7 @@ from products.models import *
 from userprofile.models import *
 from .models import Address, Order, Orderitem
 from django.conf import settings
+from django.http import JsonResponse
 
 import razorpay
 import random
@@ -36,7 +37,7 @@ def checkout(request):
     addresses = Address.objects.filter(user_id = request.user)
     if cart and cart.cart_items.exists() and cart.cart_items.first().variant.quantity < cart.cart_items.first().variant_quantity:
         # Handle the case where the variant quantity is less than the cart item quantity
-        cart.cart_items.first().delete()
+        cart.cart_items.first()
     
     cart_items = cart.cart_items.all()
     total_price = sum(item.variant.price * item.variant_quantity for item in cart_items)
@@ -135,90 +136,39 @@ def add_address(request):
 #     return redirect('home')
 
 
-
-
-
-
 def placeorder(request):
     if request.method == "POST":
-        
         neworder = Order()
 
-        neworder.user = request.user  # Assign the user instance directly
-        neworder.name = request.user.username  # Set the name field to the username
+        neworder.user = request.user
+        neworder.name = request.user.username
 
-        # user = request.user
-      
-        
-        # neworder.name = user.username
-
-        
-        print(neworder.user,"###################### hihi")
-
-
-        # user = request.user
-        # neworder.user = user.username
-
-        # user = request.user
-        # neworder.user = user.username
-       
-
-        
         address_id = request.POST.get('selection')
         neworder.address = Address.objects.get(id=address_id)
         neworder.payment_mode = request.POST.get('payment_mode')
 
-        print(address_id,"####### ivide ethi #######")
-
-
         cart = Cart.objects.get(user=request.user)
         total_price = cart.cart_total
-        print(total_price)
 
         neworder.total_price = total_price
-        payment_method = request.POST.get('payment_mode')
-        print('payment method:')
-        print(payment_method)
+        neworder.total_price_in_paise = neworder.total_price * 100
 
-        if payment_method == 'cod':
-            neworder.payment_mode = 'COD'
-        else:
-            client = razorpay.Client(auth = (settings.KEY , settings.SECRET_KEY))
+        neworder.payment_method = request.POST.get('payment_mode')
+        neworder.payment_id = request.POST.get('payment_id')
 
-            
-            payment = client.order.create(
-                amount = int(total_price)*100,
-                currency='INR',
-                payment_capture=1
-                )
-            print(payment,"####################################################  ayitundeee")
-            order_data = {
-                'cart' : cart,
-                'payment' : payment,
-                'payment': payment,
-                'amount': payment['amount']
-
-            }
-
-        # neworder.payment_mode = 'COD'
-        
-
-        trackno = "shop@electron" + str(random.randint(111111, 999999))
+        trackno =   str(random.randint(111111, 999999))
         while Order.objects.filter(tracking_no=trackno).exists():
-            trackno = "shop@electron" + str(random.randint(111111, 999999))
+            trackno =  str(random.randint(111111, 999999))
 
         neworder.tracking_no = trackno
         neworder.save()
-        print(neworder,"....................###################### ivide")
 
-        
-        cartitem = Cartitems.objects.filter(cart = cart)
+        cartitem = Cartitems.objects.filter(cart=cart)
 
         for item in cartitem:
             variant = item.variant
             variant.quantity -= int(item.variant_quantity)
             variant.save()
-            print(variant.quantity, "########################################################### njn ividund")
 
             orderitem = Orderitem.objects.create(
                 order=neworder,
@@ -228,35 +178,132 @@ def placeorder(request):
             )
             orderitem.save()
 
-
-        # for item in cartitem:
-        #     variant = item.variant
-        #     variant.quantity -= int(item.variant_quantity)
-        #     variant.save()
-        #     print(variant.quantity,"########################################################### njn ividund")
-        
-        # for item in cartitem:
-        #     orderitem = Orderitem.objects.create(
-        #         order=neworder, 
-        #         variant=item.variant,
-        #         price=item.variant.price,
-        #         order_quantity=item.variant_quantity,
-        #     )
-
-        #     orderitem.save()
-        
-            
-        
         cartitem.delete()
         messages.success(request, "Your order has been placed.")
-        return redirect('home')
+
+        payMode = request.POST.get('payment_mode')
+        if payMode == "Razorpay":
+            return JsonResponse({'status': 'Your order has been placed successfully'})
 
     return redirect('home')
 
 
 
-def razor_pay_view(request):
-    pass 
+@login_required
+def razorpaycheck(request):
+    cart = Cart.objects.get(user=request.user)
+    total_price = cart.cart_total
+
+    return JsonResponse({
+        'total_price' : total_price
+    })
+
+def orders(request):
+    orders = Order.objects.all()  # Fetch all orders from the database
+    context = {'orders': orders}
+    return render(request, 'orders.html', context)
+
+
+
+
+
+# def placezzorder(request): this is right 
+#     if request.method == "POST":
+        
+#         neworder = Order()
+
+#         neworder.user = request.user  # Assign the user instance directly
+#         neworder.name = request.user.username  # Set the name field to the username
+
+
+#         # user = request.user
+      
+        
+#         # neworder.name = user.username
+        
+#         print(neworder.user,"###################### hihi")
+
+
+        
+
+        
+#         address_id = request.POST.get('selection')
+#         neworder.address = Address.objects.get(id=address_id)
+#         neworder.payment_mode = request.POST.get('payment_mode')
+
+#         print(address_id,"####### ivide ethi #######")
+
+
+#         cart = Cart.objects.get(user=request.user)
+#         print(cart, "###########################################################################################3")
+#         total_price = cart.cart_total
+#         print(total_price ,"######################################################paisa illeh??")
+
+#         neworder.total_price = total_price
+#         print(neworder.total_price ,"######################################################rinasinde thalukal??")
+#         payment_method = request.POST.get('payment_mode')
+#         print('payment method:')
+#         print(payment_method)
+
+#         if payment_method == 'cod':
+#             neworder.payment_mode = 'COD'
+#         else:
+#             client = razorpay.Client(auth = ("rzp_test_Uariryi2s2u5dv" , "rkS3FvZypoawRTL4FGnsGILi"))
+
+           
+#             payment = client.order.create({
+#                 'amount' : int(total_price)* 100,
+#                 'currency' : 'INR',
+#                 'payment_capture' : 1,
+#                 })
+#             print( payment,"####################################################  ayitundeee")
+#             neworder.payment_mode = payment['id']
+
+#             print(neworder.payment_mode,"####################################################  ayitundeee")
+#             order_data = {
+#                 'cart' : cart,
+#                 'payment': neworder.payment_mode,
+#                 'amount': neworder.payment_mode['amount']
+
+#             }
+
+#         # neworder.payment_mode = 'COD'
+        
+
+#         trackno = "shop@electron" + str(random.randint(111111, 999999))
+#         while Order.objects.filter(tracking_no=trackno).exists():
+#             trackno = "shop@electron" + str(random.randint(111111, 999999))
+
+#         neworder.tracking_no = trackno
+#         neworder.save()
+#         print(neworder,"....................###################### ivide")
+
+        
+#         cartitem = Cartitems.objects.filter(cart = cart)
+
+#         for item in cartitem:
+#             variant = item.variant
+#             variant.quantity -= int(item.variant_quantity)
+#             variant.save()
+#             print(variant.quantity, "########################################################### njn ividund")
+
+#             orderitem = Orderitem.objects.create(
+#                 order=neworder,
+#                 variant=item.variant,
+#                 price=item.variant.price,
+#                 order_quantity=item.variant_quantity,
+#             )
+#             orderitem.save()
+
+            
+        
+#         cartitem.delete()
+#         messages.success(request, "Your order has been placed.")
+#         return redirect('home')
+
+#     return redirect('home')
+
+
 
 # def placeorder(request):
 #     if request.method == "POST":
@@ -337,3 +384,6 @@ def razor_pay_view(request):
 #         address_obj.save()
 
 #         return render(request, 'checkout.html')
+
+def invoice(request):
+    return render(request,"invoice.html")

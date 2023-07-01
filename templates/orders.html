@@ -1,0 +1,94 @@
+{% extends "store_base.html" %}
+
+{% block content %}
+
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Orders details</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Orders details</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <table class="table table-wishlist table-mobile">
+                <thead>
+                    <tr>
+                        <th>DATE</th>
+                        <th>TRACKING NO</th>
+                        <!-- <th>ORDER ITEMS</th> -->
+                        <th> PAYMENT METHOD</th>
+                        <th>AMOUNT</th>
+                        <th>ORDER STATUS</th>
+                        <th>SHIPPING ADDRESS</th>
+                       
+                        <th></th>
+
+
+                        
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.created_at|date:"F d, Y" }}</td>
+                            <td>{{ order.tracking_no }}</td>
+                            <!-- <td>
+                                {% for item in order.order_items.all %}
+                                    {{ item.product }} × {{ item.quantity }}<br>
+                                {% endfor %}
+                            </td> -->
+                            <td>{{ order.payment_mode }}</td>
+                            <td>{{ order.total_price }}</td>
+                            <td class="{% if order.status == 'pending' %} text-danger
+                            {% elif order.status == 'Out for Shipping' %}text-alert
+                            {% elif order.status == 'Out for Delivery' %}text-secondary
+                            {% elif order.status == 'Delivered' %}text-success
+                            {% endif %}">{{ order.status }}</td>
+
+                            <td>
+                                {{ order.address.fullname }} <br>
+                                {{ order.address.address }} <br>
+                                {{ order.address.district }}, {{ order.address.state }} <br>
+                                {{ order.address.pincode }} <br>
+                                {{ order.address.mobile }} <br>
+                                {{ order.address.email }} <br>
+                            </td>
+                            
+                            
+                            <td>
+                                <a href="">More details</a>
+                            </td>
+                           
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table><!-- End .table table-wishlist -->
+            <div class="wishlist-share">
+                <div class="social-icons social-icons-sm mb-2">
+                    <label class="social-label">Share on:</label>
+                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                </div><!-- End .soial-icons -->
+            </div><!-- End .wishlist-share -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main>
+
+  
+{% endblock content %}
