@@ -54,11 +54,37 @@
                         {% else %}
                         <td class="stock-col"><span class="in-stock" style="color: red;"> Out of stock</span></td>
                         {% endif %}
-
+                        
+                        {% if wishlist_item.variant.quantity  > 0 %}
                         <td class="action-col">
-                            <button class="btn btn-block btn-outline-primary-2"><a href="{% url 'add_to_cart' wishlist_item.variant.uid %}"><i class="icon-cart-plus"></i>Add to Cart </a> </button>
+                            <button class="btn btn-block btn-outline-primary-2" onclick="addToCart()">
+                                <a href="{% url 'add_to_cart' wishlist_item.variant.uid %}"><i class="icon-cart-plus"></i>Add to Cart </a> 
+                            </button>
                         </td>
-                        <td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+                        {% else %}
+                        <td class="action-col">
+                            <button class="btn btn-block btn-outline-primary-2" onclick="showSwal()">
+                                <a href="#"><i class="icon-cart-plus"></i>Add to Cart</a>
+                            </button>
+                        </td>
+                        
+
+                        <!-- <td class="action-col">
+                            <button class="btn btn-block btn-outline-primary-2"><a href=""><i class="icon-cart-plus"></i>Add to Cart </a> </button>
+                        </td> -->
+                        {% endif %}
+                        <td class="remove-col">
+                            <button class="btn-remove">
+                                <a href="{% url 'remove_wishlist' wishlist_item.id %}">
+                                    <i class="icon-close"></i>
+                                </a>
+                            </button>
+                        </td>
+                        
+
+
+                        <!-- <td class="remove-col"><button class="btn-remove"><a href="#"><i class="icon-close"></i></a></button></td> -->
+                        
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -76,4 +102,33 @@
         </div><!-- End .container -->
     </div><!-- End .page-content -->
 </main><!-- End .main -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showSwal() {
+      // Replace with your actual logic to retrieve the cart items
+      var cartItems = getCartItems(); // Function to retrieve the cart items
+  
+      var cartIsEmpty = (cartItems.length === 0);
+  
+      if (cartIsEmpty) {
+        Swal.fire({
+          icon: 'info',
+          title: 'No items in cart',
+          text: 'Your cart is currently empty.',
+          confirmButtonText: 'OK'
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Item added to cart!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    }
+  </script>
+  
+
 {% endblock content %}

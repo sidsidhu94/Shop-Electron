@@ -1,0 +1,42 @@
+{% extends "admin_base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-12 mt-5 ml-3">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">SCREENSIZE</h6>
+        <div class="table-responsive">
+            
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">SL NO</th>
+                        <th scope="col">SCREENSIZE </th>
+                        <!-- <th scope="col">IMAGE</th> -->
+                        <!-- <th scope="col">MOBILE</th> -->
+                        <!-- <th scope="col">ACTION</th> -->
+                        <!-- <th scope="col">ZIP</th>
+                        <th scope="col">Status</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for screen in screensizes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ screen.screensize }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+        
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+  
+{% endblock content %}

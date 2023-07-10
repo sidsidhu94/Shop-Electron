@@ -79,7 +79,7 @@ def admin_logout(request):
 def user(request):
         user = Account.objects.filter(is_staff = False)
 
-        paginator = Paginator(user, 5)
+        paginator = Paginator(user, 10)
         page_number = request.GET.get('page')
         paginated_users = paginator.get_page(page_number)
         context = {
@@ -146,10 +146,10 @@ def update_category(request, category_id):
     if request.method == "POST":
         
         category_name = request.POST.get('category_name')
-        image = request.FILES.get('category_image')
+        category_image = request.FILES.get('category_image')
 
         category.category_name = category_name
-        category.category_image = image
+        category.category_image = category_image
         category.save()
 
         return redirect('category') 
@@ -185,7 +185,7 @@ def base(request):
  ######################### PRODUCTS  #########################    
 
 def product(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('uid')
     categories = Category.objects.all()
     context = {
         'products': products,'categories': categories
@@ -294,10 +294,12 @@ def add_variants(request):
     products = Product.objects.all()
     colors = Color.objects.all()
     storages = Storage.objects.all()
+    screensizes = Screensize.objects.all()
     context = {
         'products': products,
         'colors': colors,
         'storages': storages,
+        'screensizes':screensizes,
     }
     return render(request, 'add_variants.html', context)
 
@@ -316,46 +318,6 @@ def unlist_variants(request, variants_id):
     
     return redirect('variants')
 
-
-# def add_variants(request):
-#     if request.method == 'POST':
-#         product_id = request.POST.get('product_name')
-#         color_id = request.POST.get('color')
-#         storage_id = request.POST.get('memory')
-#         price = request.POST.get('price')
-#         quantity = request.POST.get('quantity')
-#         images = request.FILES.getlist('images')
-        
-
-#         variant = Variant(
-#             product=Product.objects.get(Product_name=product_id),
-#             color=Color.objects.get(color_name=color_id),
-#             storage=Storage.objects.get(memory=storage_id),
-#             price=price,
-#             quantity=quantity,
-
-#         )
-#         variant.save()
-
-#         variant_name = variant.variant_name
-#         for img in reversed(images):
-#             image = ProductImage.objects.create(
-#                 variant = Variant.objects.get(variant_name = variant_name),
-#                 image   = img,
-#             )
-
-
-#         return redirect('add_variants')  # Redirect to the same page after saving the variant
-
-#     products = Product.objects.all()
-#     colors = Color.objects.all()
-#     storages = Storage.objects.all()
-#     context = {
-#         'products': products,
-#         'colors': colors,
-#         'storages': storages,
-#     }
-#     return render(request, 'add_variants.html', context)
 
 
  ######################### COLOR  #########################    
@@ -395,9 +357,30 @@ def add_storage(request):
         if memory:
             storage = Storage(memory=memory)
             storage.save()
-            return redirect('storage')
+            return redirect('add_variants')
 
     return render(request, 'add_storage.html')
+
+
+ ######################### COLOR  #########################    
+
+def screensize(request):
+    screensizes = Screensize.objects.all()
+    context = {
+        'screensizes': screensizes
+    }
+
+    return render(request,'screensize.html', context)
+
+def add_screensize(request):
+    if request.method == 'POST':
+        screensize = request.POST.get('screensize')
+        if screensize:
+            screensize = Screensize(screensize=screensize)
+            screensize.save()
+            return redirect('screensize') 
+    return render(request, 'add_screensize.html')
+
 
 
 
@@ -437,5 +420,42 @@ def update_orders(request,id):
         order.status = status
         order.save()
         return redirect('admin_orders')
+    
+ ######################### Category Offers  ######################### 
 
 
+def add_category_offer(request):
+    if request.method == "POST":
+        category_offer_name = request.POST.get("category_offer_name")
+        category_offer_percentage = request.POST.get("category_offer_percentage")
+        category_id = request.POST.get("category_name")
+        
+        category = Category.objects.get(category_name=category_id)
+        
+        category_offer = Categoryoffers.objects.create(
+            category_offer_name = category_offer_name,
+            category_offer_percentage = category_offer_percentage,
+            category_name = category
+        )
+
+        return redirect('category')
+ 
+    
+ ######################### Product Offers  ######################### 
+
+
+def add_product_offer(request):
+    if request.method == "POST":
+        product_offer_name = request.POST.get("product_offer_name")
+        product_offer_percentage = request.POST.get("product_offer_percentage")
+        product_id = request.POST.get("Product_name")
+        
+        product = Product.objects.get(Product_name=product_id)
+        
+        product_offer = Productoffers.objects.create(
+            product_offer_name = product_offer_name,
+            product_offer_percentage = product_offer_percentage,
+            product_name = product
+        )
+
+        return redirect('product')

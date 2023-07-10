@@ -1,6 +1,6 @@
 from django.db import models
 from registration.models import Account
-from products.models import Variant
+from products.models import Variant,Coupon
 from userprofile.models import *
 from datetime import timedelta,datetime
 
@@ -33,6 +33,8 @@ class Order(models.Model):
     tracking_no  = models.CharField(max_length=150, null = True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    coupon = models.CharField(null = True)
+    
 
 
     # delivery_date = models.DateTimeField(default=datetime.now() + timedelta(days=7))

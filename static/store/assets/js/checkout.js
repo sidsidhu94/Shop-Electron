@@ -16,7 +16,7 @@ $(document).ready(function () {
                     console.log(response, "...............................................................hi");
                     var options = {
                         "key": "rzp_test_Uariryi2s2u5dv", // Enter the Key ID generated from the Dashboard
-                        "amount": response.total_price, // Use the pre-calculated value in paise
+                        "amount": response.total_price , // Use the pre-calculated value in paise
                         "currency": "INR",
                         "name": "Shop Electron",
                         "description": "Purchase payment",

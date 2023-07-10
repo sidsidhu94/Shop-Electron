@@ -33,5 +33,9 @@ admin.site.register(Color)
 admin.site.register(Storage)
 admin.site.register(Variant)
 admin.site.register(Brand)
+admin.site.register(Screensize)
 
+admin.site.register(Categoryoffers)
+admin.site.register(Productoffers)
 
+admin.site.register(Coupon)

@@ -1,8 +1,9 @@
 
 {% extends "store_base.html" %}
-
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 {% block content %}
 {% load static  %}
+
 {% if cartitems %}
 <main class="main">
     <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
@@ -58,8 +59,9 @@
 
                                     <td class="price-col">₹{{ cart_item.variant.price }}</td>
                                     <td class="quantity-col">
+                                            
                                         <div class="cart-product-quantity">
-                                            <input type="number" class="form-control quantity-input" value="{{ cart_item.variant_quantity }}" min="1" max="10" step="1" data-decimals="0" required>
+                                            <input type="number" id="quantity" name="quantity" class="form-control quantity-input" value="{{ cart_item.variant_quantity }}" min="1" max="10" step="1" data-decimals="0" required >
 
                                         </div>
                                             <!-- End .cart-product-quantity -->
@@ -74,9 +76,17 @@
                         
                         <div class="cart-bottom">
                             <div class="cart-discount">
-                                <form action="#">
+                                <form action="#" method = "post">
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="alert alert-{% if message.tags %}{{message.tags}}{% endif %}" role="alert">
+                                        {{message}}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% csrf_token %}
                                     <div class="input-group">
-                                        <input type="text" class="form-control" required placeholder="coupon code">
+                                        <input type="text" name="coupon" class="form-control" required placeholder="coupon code">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
                                         </div><!-- .End .input-group-append -->
@@ -84,13 +94,16 @@
                                 </form>
                             </div><!-- End .cart-discount -->
 
-                            <a href="" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
+                            <a href=" " class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
                         </div><!-- End .cart-bottom -->
                     </div><!-- End .col-lg-9 -->
-                    <aside class="col-lg-3">
-                        <div class="summary summary-cart">
-                            <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
 
+                    <aside class="col-lg-3">
+                        
+                        <div class="summary summary-cart">
+                            
+                            <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+                            
                             <table class="table table-summary">
                                 <tbody>
                                   
@@ -100,6 +113,11 @@
                                         <td>Subtotal:</td>
                                         <td>₹ {{cart.cart_total}}</td>
                                      </tr> 
+                                     <tr class="summary-subtotal">
+                                        <td>Discount Amount:</td>
+                                        <td id="discountAmount">₹{{ coupon_obj.discount_price }}</td>
+                                    </tr>
+                                    
                                         <!-- End .summary-subtotal  -->
                                     <tr class="summary-shipping">
                                         <td>Shipping:</td>
@@ -116,25 +134,7 @@
                                         <td>₹0.00</td>
                                     </tr><!-- End .summary-shipping-row -->
 
-                                    <!-- <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
-                                                <label class="custom-control-label" for="standart-shipping">Standart:</label>
-                                            </div>
-                                        </td>
-                                        <td>$10.00</td>
-                                    </tr>
-
-                                    <tr class="summary-shipping-row">
-                                        <td>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-                                                <label class="custom-control-label" for="express-shipping">Express:</label>
-                                            </div>
-                                        </td>
-                                        <td>$20.00</td>
-                                    </tr> -->
+                                   
                                     <!-- End .summary-shipping-row -->
 
                                     <!-- <tr class="summary-shipping-estimate">
@@ -166,52 +166,58 @@
     </div><!-- End .page-content -->
 </main><!-- End .main -->
 
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
 <script>
-$(document).on('click', '.plus-btn, .minus-btn', function() {
-    var $cartItem = $(this).closest('.cart-item');
-    var itemId = $cartItem.data('item-id');
-    var isAdding = $(this).hasClass('plus-btn');
-    var $qtyInput = $cartItem.find('.qty-input');
-    var quantity = parseInt($qtyInput.val());
-  
-    if (isAdding) {
-        quantity += 1;
-    } else if (quantity > 1) {
-        quantity -= 1;
-    } else {
-        return;
-    }
-  
-    $.ajax({
-        type: 'POST',
-        url: '/update_cart_quantity/',
-        data: {
-            item_id: itemId,
-            quantity: quantity,
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        success: function(data) {
-            if (data.status === 'error') {
-                alert(data.message);
-                $('#message').text(data.message);
-            } else {
-                console.log(data);
-                $qtyInput.val(data.quantity);
-                $('#cart_total').text(data.total);
-                $('#cartitems').text(data.cartitems);
-                $('#sub-total-' + itemId).text(data.subTotal);
-                $('#grand_total').text(data.grandTotal);
-            }
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            $('#errorMessage').text('An error occurred while updating the cart.');
-            $('#errorModal').modal('show');
+
+function quantityInputs() {
+        if ( $.fn.inputSpinner ) {
+            $("input[type='number']").inputSpinner({
+                decrementButton: '<i class="icon-minus"></i>',
+                incrementButton: '<i class="icon-plus"></i>',
+                groupClass: 'input-spinner',
+                buttonsClass: 'btn-spinner',
+                buttonsWidth: '26px'
+            });
         }
-    });
-});
+    }
+
+
+
+
+
 </script>
+
+
+
+<!-- <script>
+    function updateQuantity(value) {
+        // Get the quantity input element
+        var quantityInput = document.getElementById('quantity');
+
+        // Update the quantity value
+        quantityInput.value = value;
+
+        // Update the price based on the new quantity
+        updatePrice();
+    }
+
+    function updatePrice() {
+        // Get the quantity value
+        var quantity = parseInt(document.getElementById('quantity').value);
+
+        // Get the price per item (assuming it's stored somewhere)
+        var pricePerItem = price; // Replace with the actual price per item
+
+        // Calculate the new price
+        var totalPrice = quantity * pricePerItem;
+
+        // Display the new price
+        document.getElementById('total-price').innerHTML = totalPrice;
+    }
+</script> -->
 
 
     

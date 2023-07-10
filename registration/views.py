@@ -60,9 +60,13 @@ from .helpers import send_forget_password_mail
 #     return render(request, 'base.html')
 @never_cache
 def home(request):
-    
+    categories = Category.objects.all()
+    context = {
+        "categories" : categories
+    }
+
         
-    return render(request,'home.html')
+    return render(request,'home.html',context)
    
 
 def generate_otp():
@@ -99,7 +103,7 @@ def register_view(request, *args, **kwargs):
             return redirect('verify_otp')
 
         else:
-            context['registration_form'] = form
+            context['registrcoation_form'] = form
 
     return render(request, 'register.html', context)
 
@@ -214,24 +218,50 @@ def forgot_password(request):
 #     return render(request, 'forgotpassword.html')
 
 
+from registration.models import Account
+from django.contrib.auth.models import AnonymousUser
+from django.http import HttpResponse
+
+import uuid
 
 
+def generate_unique_id():
+    return int(uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF)
+
+
+from django.contrib.auth.models import AnonymousUser
 
 def shop(request):
-    user = request.user
-    variants = Variant.objects.filter(is_listed=True)
     
-    try:
-        cart = Cart.objects.get(user=user)
+
+    variants = Variant.objects.filter(is_listed=True)
+
+    if request.user.is_authenticated:
+        user = request.user
+        is_guest_user = False
+        try:
+            cart = Cart.objects.get(user=user)
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(user=user)
         cart_items = Cartitems.objects.filter(cart=cart)
-    except Cart.DoesNotExist:
+    else:
+        user = AnonymousUser()
+        is_guest_user = True
+        guest_user_id = request.session.get('guest_user_id')
+        if not guest_user_id:
+            guest_user_id = generate_unique_id()
+            request.session['guest_user_id'] = guest_user_id
+        try:
+            guest_user = Account.objects.get(email='', is_guest=True)
+        except Account.DoesNotExist:
+            guest_user = Account.objects.create(email='', is_guest=True)
         cart = None
         cart_items = None
-    
+
     # Assign variant_id to the id attribute of each Variant
-    for variant in variants:
-        variant.variant_id = variant.uid
-    
+    # for variant in variants:
+    #     variant.variant_id = variant.uid
+
     context = {
         'variants': variants,
         'cart': cart,
@@ -243,11 +273,96 @@ def shop(request):
 
 
 
+
+
+
+
+
+
+def shop_by_category(request, category_name):
+
+    category = Category.objects.get(category_name=category_name)
+
+    products = Product.objects.filter(category_id=category.uid)
+    variants = Variant.objects.filter(product__in=products)
+
+    if request.user.is_authenticated:
+        user = request.user
+        is_guest_user = False
+        try:
+            cart = Cart.objects.get(user=user)
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(user=user)
+        cart_items = Cartitems.objects.filter(cart=cart)
+    else:
+        user = AnonymousUser()
+        is_guest_user = True
+        guest_user_id = request.session.get('guest_user_id')
+        if not guest_user_id:
+            guest_user_id = generate_unique_id()
+            request.session['guest_user_id'] = guest_user_id
+        try:
+            guest_user = Account.objects.get(email='', is_guest=True)
+        except Account.DoesNotExist:
+            guest_user = Account.objects.create(email='', is_guest=True)
+        cart = None
+        cart_items = None
+
+    # Assign variant_id to the id attribute of each Variant
+    # for variant in variants:
+    #     variant.variant_id = variant.uid
+
+    context = {
+        'variants': variants,
+        'cart': cart,
+        'cart_items': cart_items,
+    }
+    return render(request, 'store.html', context)
+    
+
+
+
+
 # def shop(request):
-#     user = request.user
+#     if request.user.is_authenticated:
+#         user = request.user
+#         is_guest_user = False
+#     else:
+#         user = AnonymousUser()
+#         is_guest_user = True
+
 #     variants = Variant.objects.filter(is_listed=True)
-#     cart = Cart.objects.get(user = user)
-#     cart_items = Cartitems.objects.filter(cart = cart)
+
+#     if is_guest_user:
+#         if 'guest_user_id' not in request.session:
+#             # Generate a unique ID for the guest user
+#             guest_user_id = generate_unique_id()
+#             request.session['guest_user_id'] = guest_user_id
+#         else:
+#             guest_user_id = request.session['guest_user_id']
+
+#         try:
+#             # Retrieve or create the guest user
+#             guest_user = Account.objects.get(email='', is_guest=True)
+#         except Account.DoesNotExist:
+#             guest_user = Account.objects.create(email='', is_guest=True)
+
+#         cart = None  # No cart for guest users
+
+#     else:
+#         # Regular authenticated user
+#         guest_user = None
+
+#         try:
+#             cart = Cart.objects.get(user=user)
+#         except Cart.DoesNotExist:
+#             cart = Cart.objects.create(user=user)
+
+#     if cart:
+#         cart_items = Cartitems.objects.filter(cart=cart)
+#     else:
+#         cart_items = None
+    
 #     # Assign variant_id to the id attribute of each Variant
 #     for variant in variants:
 #         variant.variant_id = variant.uid
@@ -255,23 +370,19 @@ def shop(request):
 #     context = {
 #         'variants': variants,
 #         'cart': cart,
-#         'cart_items':cart_items,
+#         'cart_items': cart_items,
 #     }
 
-#     return render(request, 'store.html', context)
+#     response = render(request, 'store.html', context)
+
+#     return response
 
 
-# def shop(request):
-#     # variants = Variant.objects.filter(variis_listed=True)
-#     variants = Variant.objects.filter(is_listed = True)
-    
 
-#     context = {
-#         'variants': variants,
-#         'MEDIA_URL': settings.MEDIA_URL,
-#     }
 
-#     return render(request, 'shop.html', context)
+
+
+
 
 def productdetails(request, variant_id):
    

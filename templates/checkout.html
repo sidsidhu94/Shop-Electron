@@ -20,11 +20,25 @@
     <div class="page-content">
         <div class="checkout">
             <div class="container">
-                <div class="checkout-discount">
-                    <form action="#">
-                        <input type="text" class="form-control" required id="checkout-discount-input">
-                        <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-                    </form>
+                <div class="cart-bottom">
+                    <div class="cart-discount">
+                        <form action="#" method = "post">
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{% if message.tags %}{{message.tags}}{% endif %}" role="alert">
+                                {{message}}
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" name="coupon" class="form-control" required placeholder="coupon code">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
+                                </div><!-- .End .input-group-append -->
+                            </div><!-- End .input-group -->
+                        </form>
+                    </div>
                 </div><!-- End .checkout-discount -->
 
                 <form action="{% url 'placeorder' %}" method="post">
@@ -60,8 +74,10 @@
                                 </a>
                             </div>
                         </div><!-- End .col-lg-9 -->
+                        
 
                         <aside class="col-lg-4">
+                            
                             <div class="summary">
                                 <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
@@ -95,6 +111,7 @@
                                         </tr><!-- End .summary-total -->
                                     </tbody>
                                 </table><!-- End .table table-summary -->
+                                
 
                                 <div class="accordion-summary" id="accordion-payment">
                                     <div class="card my-3">

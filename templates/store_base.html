@@ -130,6 +130,7 @@
                     
 
                     <div class="header-right">
+                        {% if user.is_authenticated %}
                         <div class="wishlist">
                             <a href="{% url 'wishlist' %}" title="Wishlist">
                                 <div class="icon">
@@ -138,7 +139,9 @@
                                 </div>
                                 <p>Wishlist</p>
                             </a>
-                        </div><!-- End .compare-dropdown -->
+                        </div>
+                        {% endif %}
+                        <!-- End .compare-dropdown -->
 
                         <div class="dropdown cart-dropdown">
                             <a href="{% url 'cart' %}" class="dropdown-toggle"  aria-expanded="false" data-display="static">
@@ -188,15 +191,16 @@
                             </div><!-- End .dropdown-menu -->
                         </div><!-- End .cart-dropdown -->
                         <div class="header-right">
-                            <div class="wishlist">
-                                <a href="{% url 'profile' %}" title="Wishlist">
-                                    <div class="icon">
-                                        <i class="icon-user"></i>
-                                        
-                                    </div>
-                                    <p>Profile</p>
-                                </a>
-                            </div>
+                            {% if user.is_authenticated %}
+                                <div class="wishlist">
+                                    <a href="{% url 'profile' %}" title="Wishlist">
+                                        <div class="icon">
+                                            <i class="icon-user"></i>
+                                        </div>
+                                        <p>Profile</p>
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
@@ -230,7 +234,7 @@
                                                                 
                                                             </ul>
 
-                                                            <div class="menu-title">Shop no sidebar</div><!-- End .menu-title -->
+                                                            <div class="menu-title">Category</div><!-- End .menu-title -->
                                                             <ul>
                                                                 <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
                                                                 <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>

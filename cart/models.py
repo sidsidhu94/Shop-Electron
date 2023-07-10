@@ -7,12 +7,18 @@ from base.models import BaseModel
 
 class Cart(BaseModel):
     user                = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="carts")
+    coupon              = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank= True)
     is_paid             = models.BooleanField(default=True)
 
     @property
+
     def cart_total(self):
         cartitems = self.cart_items.all()
         total     = sum([item.get_total for item in cartitems])
+
+        if self.coupon:
+            return total - self.coupon.discount_price
+
         return total
     
     @property
