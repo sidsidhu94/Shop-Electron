@@ -74,66 +74,6 @@ def add_address(request):
     return render(request, 'checkout')
 
 
-# def placeorder(request):
-#     if request.method == "POST":
-#         neworder = Order()
-#         neworder.user = request.user
-#         neworder.name = request.user.username
-
-#         address_id = request.POST.get('selection')
-#         neworder.address = Address.objects.get(id=address_id)
-#         neworder.payment_mode = request.POST.get('payment_mode')
-
-#         cart = Cart.objects.get(user=request.user)
-#         total_price = cart.cart_total
-#         neworder.total_price = total_price
-#         payment_method = request.POST.get('payment_mode')
-
-#         if payment_method == 'cod':
-#             neworder.payment_mode = 'COD'
-#         else:
-#             try:
-#                 client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
-#                 payment = client.order.create(
-#                     amount=int(total_price) * 100,
-#                     currency='INR',
-#                     payment_capture=1
-#                 )
-#                 order_item = {
-#                     'cart': cart,
-#                     'payment': payment,
-#                     'amount': payment['amount']
-#                 }
-#             except Exception as e:
-#                 print("Razorpay payment creation failed:", str(e))
-#                 # Handle the error and return an appropriate response
-
-#         trackno = "shop@electron" + str(random.randint(111111, 999999))
-#         while Order.objects.filter(tracking_no=trackno).exists():
-#             trackno = "shop@electron" + str(random.randint(111111, 999999))
-
-#         neworder.tracking_no = trackno
-#         neworder.save()
-
-#         cart_items = Cartitems.objects.filter(cart=cart)
-#         for item in cart_items:
-#             variant = item.variant
-#             variant.quantity -= int(item.variant_quantity)
-#             variant.save()
-
-#             order_item = Orderitem.objects.create(
-#                 order=neworder,
-#                 variant=item.variant,
-#                 price=item.variant.price,
-#                 order_quantity=item.variant_quantity,
-#             )
-#             order_item.save()
-
-#         cart_items.delete()
-#         messages.success(request, "Your order has been placed.")
-#         return redirect('home')
-
-#     return redirect('home')
 def placeorder(request):
     if request.method == "POST":
         neworder = Order()
@@ -152,16 +92,18 @@ def placeorder(request):
         while Order.objects.filter(tracking_no=trackno).exists():
             trackno = str(random.randint(111111, 999999))
         neworder.tracking_no = trackno
-        if cart.coupon:
-            neworder.coupon = cart.coupon
         neworder.save()
+
         cartitem = Cartitems.objects.filter(cart=cart)
         insufficient_stock = False  # Track if any item has insufficient stock
+
         for item in cartitem:
             variant = item.variant
+            
             if variant.quantity >= item.variant_quantity:
                 variant.quantity -= int(item.variant_quantity)
                 variant.save()
+                
                 orderitem = Orderitem.objects.create(
                     order=neworder,
                     variant=item.variant,
@@ -169,38 +111,119 @@ def placeorder(request):
                     order_quantity=item.variant_quantity,
                 )
                 orderitem.save()
-            else:
-                insufficient_stock = True
+                
+                
                 item.delete()  # Remove the item from the cart
-                messages.warning(request, f"Not enough stock: {variant.variant_name}")
-        cartitem.delete()
+            else:
+                  # Remove the item from the cart
+                
+                insufficient_stock = True
+
+        if insufficient_stock:
+            messages.warning(request, f"Not enough stock: {variant.variant_name}")
+            # messages.error(request, "Some items are out of stock. Please review your cart.")
+            return redirect('cart')  # Redirect back to the cart page if any item is out of stock
+
         messages.success(request, "Your order has been placed.")
+
         payMode = request.POST.get('payment_mode')
-        if payMode == "Razorpay" and not insufficient_stock:
+        if payMode == "Razorpay":
             return JsonResponse({'status': 'Your order has been placed successfully'})
-        elif payMode == "COD" and not insufficient_stock:
+        elif payMode == "COD":
             return JsonResponse({'status': 'Your order has been placed successfully'})
-        
 
-        # if cart.coupon:
-        #     neworder.coupon = cart.coupon
+        if cart.coupon:
+            neworder.coupon = cart.coupon
 
-        #     print(neworder.coupon,"#########################################################################")
-        #     coupon = cart.coupon
-            
-        #     coupon.is_applied = True
-        #     coupon.save()
-            
+            coupon = cart.coupon
+            coupon.is_applied = True
+            coupon.save()
 
             cart.coupon = None
             cart.save()
-            
-        
 
-        
-
+       
+        return redirect('home')
 
     return redirect('home')
+
+
+
+# def placeorder(request): this is the correct code
+#     if request.method == "POST":
+#         neworder = Order()
+#         neworder.user = request.user
+#         neworder.name = request.user.username
+#         address_id = request.POST.get('selection')
+#         neworder.address = Address.objects.get(id=address_id)
+#         neworder.payment_mode = request.POST.get('payment_mode')
+#         cart = Cart.objects.get(user=request.user)
+#         total_price = cart.cart_total
+#         neworder.total_price = total_price
+#         neworder.total_price_in_paise = neworder.total_price * 100
+#         neworder.payment_method = request.POST.get('payment_mode')
+#         neworder.payment_id = request.POST.get('payment_id')
+#         trackno = str(random.randint(111111, 999999))
+#         while Order.objects.filter(tracking_no=trackno).exists():
+#             trackno = str(random.randint(111111, 999999))
+#         neworder.tracking_no = trackno
+#         if cart.coupon:
+#             neworder.coupon = cart.coupon
+            
+#         neworder.save()
+#         cartitem = Cartitems.objects.filter(cart=cart)
+#         insufficient_stock = False  # Track if any item has insufficient stock
+
+#         for item in cartitem:
+#             variant = item.variant
+            
+#             if variant.quantity >= item.variant_quantity:
+#                 variant.quantity -= int(item.variant_quantity)
+#                 variant.save()
+                
+#                 orderitem = Orderitem.objects.create(
+#                     order=neworder,
+#                     variant=item.variant,
+#                     price=item.variant.price,
+#                     order_quantity=item.variant_quantity,
+#                 )
+#                 orderitem.save()
+                
+#                 item.delete()  # Remove the item from the cart
+#             else:
+#                 insufficient_stock = True
+#                 item.delete()  # Remove the item from the cart
+#                 messages.warning(request, f"Not enough stock: {variant.variant_name}")
+
+#         if insufficient_stock:
+#             messages.error(request, "Some items are out of stock. Please review your cart.")
+#             return redirect('cart')  # Redirect back to the cart page if any item is out of stock
+
+#         messages.success(request, "Your order has been placed.")
+
+#         payMode = request.POST.get('payment_mode')
+#         if payMode == "Razorpay":
+#             return JsonResponse({'status': 'Your order has been placed successfully'})
+#         elif payMode == "COD":
+#             return JsonResponse({'status': 'Your order has been placed successfully'})
+
+        
+
+#         if cart.coupon:
+#             neworder.coupon = cart.coupon
+
+#             print(neworder.coupon,"#########################################################################")
+#             coupon = cart.coupon
+            
+#             coupon.is_applied = True
+#             coupon.save()
+
+#             cart.coupon = None
+#             cart.save()
+            
+          
+           
+#     return redirect('home')
 
 
 

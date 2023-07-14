@@ -20,6 +20,7 @@
                         <th scope="col">DESCRIPTION</th>
                         <th scope="col">Image</th>
                         <!-- <th scope="col">DESCRIPTION</th> -->
+                        <th scope="col">EDIT</th>
                         <th scope="col">ACTION</th>
 
                         <!-- <th scope="col">ZIP</th>
@@ -38,12 +39,19 @@
                         <td>
                             <img style="width: 100px; height: 70px ;" src="{{ product.image.url }}" alt="">
                         </td>
+                        
                         {%  else %}
                         <!-- <td>
                             <img src="{% static 'media/product.url' %}" alt="">
                         </td> -->
                         <!-- <td><td> -->
                             {% endif %}
+                            <td>
+                                <a href="#staticBackdrop{{ product.uid }}" class="edit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ product.uid }}">
+                                    <i class="fas fa-pencil-alt fa-lg"></i>
+    
+                                </a>
+                            </td>
 
                             <td>
                                 {% if product.is_listed %}
@@ -111,4 +119,40 @@
     </div>
   </div>
   
+  <!-- Edit Modal -->
+{% for product in products %}
+<div class="modal fade" id="staticBackdrop{{ product.uid }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_product_{{ product.id }}" method="post" action="{% url 'update_product' product.uid %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                    <div class="mb-3">
+                        <label for="Product_name" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="Product_name" name="Product_name" value="{{ product.Product_name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Product_description" class="form-label">Product Description</label>
+                        <input type="text" class="form-control" id="Product_description" name="prodct_description" value="{{ product.prodct_description }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Image</label>
+                        <input type="file" class="form-control" id="image" name="image" ">
+                    </div>
+                    <!-- Add other product form fields here -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock content %}

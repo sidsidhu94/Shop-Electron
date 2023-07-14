@@ -33,7 +33,7 @@
                         </td>
                         <td>
                             <a href="#staticBackdrop{{ category.uid }}" class="edit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ category.uid }}">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-pencil-alt fa-lg"></i>
                             </a>
                             <a href="{% url 'delete_category' category.uid %}">
                                 <i class="fas fa-trash"></i>
@@ -117,7 +117,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="categoryImage" class="form-label">Image</label>
-                        <input type="file" class="form-control" id="categoryImage" name="category_image">
+                        <input type="file" class="form-control" id="categoryImage" name="category_image" value = {{category.category_image}}>
                     </div>
                     <!-- Add other category form fields here -->
                     <div class="modal-footer">

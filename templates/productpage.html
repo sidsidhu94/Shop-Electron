@@ -68,7 +68,12 @@
                             </div><!-- End .rating-container -->
 
                             <div class="product-price">
+                                {% if details.offer_price %}
+                                <del class="text-danger mx-4">₹{{ details.price }}</del>
+                                <span >₹{{ details.offer_price }}</span>
+                            {% else %}
                                 ₹{{ details.price }}
+                            {% endif %}
                             </div><!-- End .product-price -->
 
                             <div class="product-content">

@@ -208,108 +208,74 @@
 
             <div class="header-bottom sticky-header">
                 <div class="container">
-                    
-
-                    <div class="header-center">
-                        <nav class="main-nav">
-                            <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
-
-                             
-                                </li>
-                                <li>
-                                    <a href="{% url 'shop'  %}" class="sf-with-ul">Shop</a>
-
-                                    <div class="megamenu megamenu-md">
-                                        <div class="row no-gutters">
-                                            <div class="col-md-8">
-                                                <div class="menu-col">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="menu-title">Brand</div><!-- End .menu-title -->
-                                                            <ul>
-                                                                <li><a href="category-list.html"></a></li>
-                                                                <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
-                                                                
-                                                            </ul>
-
-                                                            <div class="menu-title">Category</div><!-- End .menu-title -->
-                                                            <ul>
-                                                                <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
-                                                                <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>
-                                                            </ul>
-                                                        </div><!-- End .col-md-6 -->
-
-                                                    </div><!-- End .row -->
-                                                </div><!-- End .menu-col -->
-                                            </div><!-- End .col-md-8 -->
-
-                                        
-                                        </div><!-- End .row -->
-                                    </div><!-- End .megamenu megamenu-md -->
-                                </li>
-                                <li>
-                                    <a href="product.html" class="sf-with-ul">Product</a>
-
-                                    <div class="megamenu megamenu-sm">
-                                        <div class="row no-gutters">
-                                            <div class="col-md-6">
-                                                <div class="menu-col">
-                                                    <div class="menu-title">Product Details</div><!-- End .menu-title -->
-                                                    <ul>
-                                                        <li><a href="product.html">Default</a></li>
-                                                        <li><a href="product-centered.html">Centered</a></li>
-                                                        <li><a href="product-extended.html"><span>Extended Info<span class="tip tip-new">New</span></span></a></li>
-                                                        <li><a href="product-gallery.html">Gallery</a></li>
-                                                        <li><a href="product-sticky.html">Sticky Info</a></li>
-                                                        <li><a href="product-sidebar.html">Boxed With Sidebar</a></li>
-                                                        <li><a href="product-fullwidth.html">Full Width</a></li>
-                                                        <li><a href="product-masonry.html">Masonry Sticky Info</a></li>
-                                                    </ul>
-                                                </div><!-- End .menu-col -->
-                                            </div><!-- End .col-md-6 -->
-
-                                            
-                                        </div><!-- End .row -->
-                                    </div><!-- End .megamenu megamenu-sm -->
-                                </li>
-                                <li>
-                                    <a href="#" class="sf-with-ul">Pages</a>
-
-                                    <ul>
-                                        <li>
-                                            <a href="about.html" class="sf-with-ul">About</a>
-
-                                            <ul>
-                                                <li><a href="about.html">About 01</a></li>
-                                                <li><a href="about-2.html">About 02</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="contact.html" class="sf-with-ul">Contact</a>
-
-                                            <ul>
-                                                <li><a href="contact.html">Contact 01</a></li>
-                                                <li><a href="contact-2.html">Contact 02</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="login.html">Login</a></li>
-                                        <li><a href="faq.html">FAQs</a></li>
-                                        <li><a href="404.html">Error 404</a></li>
-                                        <li><a href="coming-soon.html">Coming Soon</a></li>
-                                    </ul>
-                                </li>
-                                
-                            </ul><!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-                    </div><!-- End .header-center -->
-
-                    <div class="header-right">
-                        <i class="la la-lightbulb-o"></i><p>Clearance<span class="highlight">&nbsp;Up to 30% Off</span></p>
-                    </div>
-                </div><!-- End .container -->
-            </div><!-- End .header-bottom -->
+                  <div class="header-center">
+                    <nav class="main-nav">
+                      <ul class="menu sf-arrows">
+                        <li class="megamenu-container active">
+                          <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
+                        </li>
+                        <li>
+                          <a href="{% url 'shop'  %}" class="sf-with-ul">Shop</a>
+      
+                          <div class="megamenu megamenu-md">
+                            <div class="row no-gutters">
+                              <div class="col-md-8">
+                                <div class="menu-col">
+                                  <div class="row" >
+                                    <div class="col-md-6">
+                                      <div class="row d-flex" style=" width: 400px;">
+                                        <div class="m-2" >
+                                          <div class="menu-title">Brand</div>
+                                          <!-- End .menu-title -->
+                                          <ul>
+                                            <li><a href="category-list.html"></a>aaaaaa</li>
+                                            <li>
+                                              <a href="category-2cols.html"
+                                                >Shop Grid 2 Columns</a
+                                              >
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <div class="m-2" >
+                                          <div class="menu-title">Category</div>
+                                          <!-- End .menu-title -->
+                                          {% for item in categories %}
+                                          <ul>
+                                            <li>
+                                              <a href="{% url 'shop_by_category' category_name=item.category_name %}">{{ item.category_name }}</a>
+                                            </li>
+                                            <!-- <li>
+                                              <a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a>
+                                            </li> -->
+                                          </ul>
+                                          {% endfor %}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- End .menu-col -->
+                              </div>
+                              <!-- End .col-md-8 -->
+                            </div>
+                            <!-- End .row -->
+                          </div>
+                          <!-- End .megamenu megamenu-md -->
+                        </li>
+                      </ul>
+                      <!-- End .menu -->
+                    </nav>
+                    <!-- End .main-nav -->
+                  </div>
+                  <!-- End .header-center -->
+      
+                  <div class="header-right">
+                    <i class="la la-lightbulb-o"></i>
+                    <p>Clearance<span class="highlight">&nbsp;Up to 30% Off</span></p>
+                  </div>
+                </div>
+                <!-- End .container -->
+              </div>
         </header><!-- End .header -->
 
 

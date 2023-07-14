@@ -127,7 +127,7 @@ class Variant(BaseModel):
             for product_offer in product_offers:
                 combined_discount += product_offer.product_offer_percentage
 
-            discount_amount = self.price * combined_discount / 100
+            discount_amount = self.price * combined_discount // 100
             discounted_price = self.price - discount_amount
 
             if discounted_price < 0:

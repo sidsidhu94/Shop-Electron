@@ -1,0 +1,84 @@
+{% extends "admin_base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="col-12 mt-5 ml-3">
+    <div class="bg-light rounded h-100 p-4">
+        <h6 class="mb-4">COUPON</h6>
+        <button style="border-radius: 10px; margin-left: 800px; margin-top: -90px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add Coupons
+          </button>
+        <div class="table-responsive">
+            
+            <table class="table"  style="font-size: small;">
+                <thead>
+                    <tr>
+                        <th scope="col">SL NO</th>
+                        <th scope="col">COUPON CODE </th>
+                        <th scope="col">DISCOUNT PRICE </th>
+                        <th scope="col">MINIMUM AMOUNT </th>
+
+                        <!-- <th scope="col">IMAGE</th> -->
+                        <!-- <th scope="col">MOBILE</th> -->
+                        <!-- <th scope="col">ACTION</th> -->
+                        <!-- <th scope="col">ZIP</th>
+                        <th scope="col">Status</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ coupon.coupon_code }}</td>
+                        <td>{{ coupon.discount_price }}</td>
+                        <td>{{ coupon.minimum_amount }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+        
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<!-- add-coupon-Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Coupon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add_coupon_offer_form" method="post" action="{% url 'add_coupon' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="coupon_code" class="form-label">Coupon Code</label>
+                        <input type="text" class="form-control" id="coupon_code" name="coupon_code" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="discount_price" class="form-label">Discount Amount</label>
+                        <input type="number" class="form-control" id="discount_price" name="discount_price" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="minimum_amount" class="form-label">Minimum Amount</label>
+                        <input type="number" class="form-control" id="minimum_amount" name="minimum_amount" value="">
+                    </div>
+                    <!-- Add other category offer form fields here -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="add_coupon_offer_form" class="btn btn-primary">Add Coupon</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

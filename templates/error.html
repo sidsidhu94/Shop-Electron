@@ -1,0 +1,463 @@
+{% load static  %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- molla/index-4.html  22 Nov 2019 09:53:08 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %} {% endblock title %}</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'store/assets/images/icons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'store/assets/images/icons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'store/assets/images/icons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'store/assets/images/icons/site.html' %}">
+    <link rel="mask-icon" href="{% static 'store/assets/images/icons/safari-pinned-tab.svg' %}" color="#666666">
+    <link rel="shortcut icon" href="{% static 'store/assets/images/icons/favicon.ico' %}">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="{% static 'store/assets/images/icons/browserconfig.xml' %}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="{% static 'store/assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css' %}">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'store/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/owl-carousel/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/jquery.countdown.css' %}">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'store/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/skins/skin-demo-4.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/demos/demo-4.css' %}">
+    <link rel="stylesheet" href="{% static 'store/assets/css/plugins/nouislider/nouislider.css' %}">
+
+    <!-- =======================Additional links==================================================== -->
+
+    {% block links %}{% endblock links %}
+
+    <!-- =========================================================================================== -->
+
+
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="header header-intro-clearance header-4">
+            <div class="header-top">
+                <div class="container">
+                    <div class="header-left">
+                        <a href="tel:#"><i class="icon-phone"></i>Call: +91-9567694399</a>
+                    </div><!-- End .header-left -->
+
+                    <div class="header-right">
+
+                        <ul class="top-menu">
+                            <li>
+                                <a href="#">Links</a>
+                                <ul>
+                                    <li>
+                                        <div class="header-dropdown">
+                                            <!-- <a href="#">USD</a>
+                                            <div class="header-menu">
+                                                <ul>
+                                                    <li><a href="#">Eur</a></li>
+                                                    <li><a href="#">Usd</a></li>
+                                                </ul>
+                                            </div> -->
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="header-dropdown">
+                                            <a href="#">English</a>
+                                            <div class="header-menu">
+                                                <!-- <ul>
+                                                    <li><a href="#">English</a></li>
+                                                    <li><a href="#">French</a></li>
+                                                    <li><a href="#">Spanish</a></li>
+                                                </ul> -->
+                                            </div>
+                                        </div>
+                                    </li>
+                                  {% comment %} <li><a href="#signin-modal" data-toggle="modal">Sign in / Sign up</a></li> {% endcomment %}
+                                    {% if user.is_authenticated %}
+                                        <li><a href="{% url 'logout_view' %}">Logout</a></li>
+                                    {% else %}
+                                        <li><a href="{% url 'login_view' %}">Sign in / Sign up</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul><!-- End .top-menu -->
+                    </div><!-- End .header-right -->
+
+                </div><!-- End .container -->
+            </div><!-- End .header-top -->
+
+            <div class="header-middle">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+                        
+                        <a href="{% url 'home' %}" class="logo">
+                            
+                            <img src="{% static 'store/assets/images/demos/demo-4/logo.png' %}" alt="Molla Logo" width="150" height="150">
+                            <!-- <h3 style="color: rgb(36, 137, 150);">Shop@Electron</h3> -->
+                        </a>
+                    </div><!-- End .header-left -->
+
+                    <div class="header-center">
+                        <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
+                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                            <form action="#" method="get">
+                                <div class="header-search-wrapper search-wrapper-wide">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
+                        </div><!-- End .header-search -->
+                    </div>
+
+                    
+
+                    <div class="header-right">
+                        {% if user.is_authenticated %}
+                        <div class="wishlist">
+                            <a href="{% url 'wishlist' %}" title="Wishlist">
+                                <div class="icon">
+                                    <i class="icon-heart-o"></i>
+                                    <span class="wishlist-count badge">3</span>
+                                </div>
+                                <p>Wishlist</p>
+                            </a>
+                        </div>
+                        {% endif %}
+                        <!-- End .compare-dropdown -->
+
+                        <div class="dropdown cart-dropdown">
+                            <a href="{% url 'cart' %}" class="dropdown-toggle"  aria-expanded="false" data-display="static">
+                                <div class="icon">
+                                    <i class="icon-shopping-cart"></i>
+                                    <span class="cart-count">{{ cart.get_cart_items }}</span>
+                                </div>
+                                <p>Cart</p>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                {% for cart_item in cart_items %}
+                                <div class="dropdown-cart-products">
+                                    <div class="product">
+                                        <div class="product-cart-details">
+                                            <h4 class="product-title">
+                                                <a href="product.html">{{ cart_item.variant.product.Product_name }}</a>
+                                            </h4>
+
+                                            <span class="cart-product-info">
+                                                <span class="cart-product-qty">{{ cart_item.variant_quantity }}</span>
+                                                X ₹{{ cart_item.variant.price }}
+                                            </span>
+                                        </div><!-- End .product-cart-details -->
+
+                                        <figure class="product-image-container">
+                                            <a href="product.html" class="product-image">
+                                                <img src="{{cart_item.variant.variantimages.first.image.url}}" alt="product">
+                                            </a>
+                                        </figure>
+                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                                    </div><!-- End .product -->
+                                    
+                                    
+                                </div><!-- End .cart-product -->
+                                {% endfor %}
+                                <div class="dropdown-cart-total">
+                                    <span>Total</span>
+
+                                    <span class="cart-total-price">$160.00</span>
+                                </div><!-- End .dropdown-cart-total -->
+
+                                <div class="dropdown-cart-action">
+                                    <a href="{% url 'cart' %}" class="btn btn-primary">View Cart</a>
+                                    <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
+                                </div><!-- End .dropdown-cart-total -->
+                            </div><!-- End .dropdown-menu -->
+                        </div><!-- End .cart-dropdown -->
+                        <div class="header-right">
+                            {% if user.is_authenticated %}
+                                <div class="wishlist">
+                                    <a href="{% url 'profile' %}" title="Wishlist">
+                                        <div class="icon">
+                                            <i class="icon-user"></i>
+                                        </div>
+                                        <p>Profile</p>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+
+            <div class="header-bottom sticky-header">
+                <div class="container">
+                  <div class="header-center">
+                    <nav class="main-nav">
+                      <ul class="menu sf-arrows">
+                        <li class="megamenu-container active">
+                          <a href="{% url 'home' %}" class="sf-with-ul">Home</a>
+                        </li>
+                        <li>
+                          <a href="{% url 'shop'  %}" class="sf-with-ul">Shop</a>
+      
+                          <div class="megamenu megamenu-md">
+                            <div class="row no-gutters">
+                              <div class="col-md-8">
+                                <div class="menu-col">
+                                  <div class="row" >
+                                    <div class="col-md-6">
+                                      <div class="row d-flex" style=" width: 400px;">
+                                        <div class="m-2" >
+                                          <div class="menu-title">Brand</div>
+                                          <!-- End .menu-title -->
+                                          <ul>
+                                            <li><a href="category-list.html"></a>aaaaaa</li>
+                                            <li>
+                                              <a href="category-2cols.html"
+                                                >Shop Grid 2 Columns</a
+                                              >
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <div class="m-2" >
+                                          <div class="menu-title">Category</div>
+                                          <!-- End .menu-title -->
+                                          {% for item in categories %}
+                                          <ul>
+                                            <li>
+                                              <a href="{% url 'shop_by_category' category_name=item.category_name %}">{{ item.category_name }}</a>
+                                            </li>
+                                            <!-- <li>
+                                              <a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a>
+                                            </li> -->
+                                          </ul>
+                                          {% endfor %}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- End .menu-col -->
+                              </div>
+                              <!-- End .col-md-8 -->
+                            </div>
+                            <!-- End .row -->
+                          </div>
+                          <!-- End .megamenu megamenu-md -->
+                        </li>
+                      </ul>
+                      <!-- End .menu -->
+                    </nav>
+                    <!-- End .main-nav -->
+                  </div>
+                  <!-- End .header-center -->
+      
+                  <div class="header-right">
+                    <i class="la la-lightbulb-o"></i>
+                    <p>Clearance<span class="highlight">&nbsp;Up to 30% Off</span></p>
+                  </div>
+                </div>
+                <!-- End .container -->
+              </div>
+        </header><!-- End .header -->
+
+
+
+{% comment %} ====================================================================================================================================================== {% endcomment %}
+
+
+
+        {% block content %} {% endblock content %}
+
+
+
+
+{% comment %} ====================================================================================================================================================== {% endcomment %}
+
+
+
+        <footer class="footer">
+           
+        	<div class="footer-middle">
+	            <div class="container">
+	            	<div class="row">
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget widget-about">
+	            				<img src="{% static 'store/assets/images/demos/demo-4/logo-footer.png' %}" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
+
+	            				<div class="widget-call">
+                                    <i class="icon-phone"></i>
+                                    Got Question? Call us 24/7
+                                    <a href="tel:#">+91-9567694399</a>         
+                                </div><!-- End .widget-call -->
+	            			</div><!-- End .widget about-widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="about.html">About Shop@Electron</a></li>
+                                    <li><a href="#">Our Services</a></li>
+	            					<li><a href="#">How to shop on Shop@Electron</a></li>
+	            					<li><a href="faq.html">FAQ</a></li>
+	            					<li><a href="contact.html">Contact us</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Payment Methods</a></li>
+	            					<li><a href="#">Money-back guarantee!</a></li>
+	            					<li><a href="#">Returns</a></li>
+	            					<li><a href="#">Shipping</a></li>
+	            					<li><a href="#">Terms and conditions</a></li>
+	            					<li><a href="#">Privacy Policy</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+
+	            		<div class="col-sm-6 col-lg-3">
+	            			<div class="widget">
+	            				<h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+	            				<ul class="widget-list">
+	            					<li><a href="#">Sign In</a></li>
+	            					<li><a href="cart.html">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
+	            					<li><a href="#">Track My Order</a></li>
+	            					<li><a href="#">Help</a></li>
+	            				</ul><!-- End .widget-list -->
+	            			</div><!-- End .widget -->
+	            		</div><!-- End .col-sm-6 col-lg-3 -->
+	            	</div><!-- End .row -->
+	            </div><!-- End .container -->
+	        </div><!-- End .footer-middle -->
+
+	        <div class="footer-bottom">
+	        	<div class="container">
+	        		<p class="footer-copyright">Copyright © 2023 Shop@Electron. All Rights Reserved.</p><!-- End .footer-copyright -->
+	        		<figure class="footer-payments">
+	        			<img src="{%static 'store/assets/images/payments.png' %}" alt="Payment methods" width="272" height="20">
+	        		</figure><!-- End .footer-payments -->
+	        	</div><!-- End .container -->
+	        </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container mobile-menu-light">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+            
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+
+            <ul class="nav nav-pills-mobile nav-border-anim" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="mobile-menu-link" data-toggle="tab" href="#mobile-menu-tab" role="tab" aria-controls="mobile-menu-tab" aria-selected="true">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="mobile-cats-link" data-toggle="tab" href="#mobile-cats-tab" role="tab" aria-controls="mobile-cats-tab" aria-selected="false">Categories</a>
+                </li>
+            </ul>
+
+          
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+   
+{% comment %} 
+    <div class="container newsletter-popup-container mfp-hide" id="newsletter-popup-form">
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row no-gutters bg-white newsletter-popup-content">
+                    <div class="col-xl-3-5col col-lg-7 banner-content-wrap">
+                        <div class="banner-content text-center">
+                            <img src="assets/images/popup/newsletter/logo.png" class="logo" alt="logo" width="60" height="15">
+                            <h2 class="banner-title">get <span>25<light>%</light></span> off</h2>
+                            <p>Subscribe to the Molla eCommerce newsletter to receive timely updates from your favorite products.</p>
+                            <form action="#">
+                                <div class="input-group input-group-round">
+                                    <input type="email" class="form-control form-control-white" placeholder="Your Email Address" aria-label="Email Adress" required>
+                                    <div class="input-group-append">
+                                        <button class="btn" type="submit"><span>go</span></button>
+                                    </div><!-- .End .input-group-append -->
+                                </div><!-- .End .input-group -->
+                            </form>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
+                                <label class="custom-control-label" for="register-policy-2">Do not show this popup again</label>
+                            </div><!-- End .custom-checkbox -->
+                        </div>
+                    </div>
+                    <div class="col-xl-2-5col col-lg-5 ">
+                        <img src="{% static 'store/assets/images/popup/newsletter/img-1.jpg' %}" class="newsletter-img" alt="newsletter">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    <!-- Plugins JS File -->
+    <script src="{% static 'store/assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/jquery.hoverIntent.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/superfish.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/bootstrap-input-spinner.js' %}"></script>
+    <script src="{% static 'store/assets/js/jquery.plugin.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/nouislider.min.js' %}"></script>
+    <script src="{% static 'store/assets/js/wNumb.js' %}"></script>
+    {% block script %}
+      
+    {% endblock script %}
+    <!-- Main JS File -->
+    <script src="{% static 'store/assets/js/main.js' %}"></script>
+    <script src="{% static 'store/assets/js/demos/demo-4.js' %}"></script>
+
+    
+    <script src="{% static 'store/assets/js/checkout.js' %}"></script>
+    
+</body>
+
+
+<!-- molla/index-4.html  22 Nov 2019 09:54:18 GMT -->
+</html>

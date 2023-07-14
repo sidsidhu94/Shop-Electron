@@ -1,8 +1,13 @@
 
 {% extends "store_base.html" %}
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-{% block content %}
 {% load static  %}
+
+{% block links %}
+<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css">
+{% endblock links %}
+
+{% block content %}
 
 {% if cartitems %}
 <main class="main">
@@ -31,7 +36,11 @@
                                 <tr>
                                     <th>Product</th>
                                     <th>Price</th>
+                                    <th>Selling Price</th>
+                                    
                                     <th>Quantity</th>
+                                    <th>Stock Status</th>
+
                                     <th>Total</th>
                                     <th></th>
                                 </tr>
@@ -39,34 +48,52 @@
 
                             <tbody>
                                 {% for cart_item in cartitems %}
-                                <tr>
-                                    <td class="product-col">
-                                        <div class="product">
-                                            <figure class="product-media">
-                                                <a href="#">
-                                                    <img src="{{cart_item.variant.variantimages.first.image.url}}" alt="Product image">
-                                                </a>
-                                            </figure>
+                                <tr data-cart-item-id="{{ cart_item.uid }}"> 
+                                    <td class="product-col d-flex flex-column">
+                                        <figure class="product-media">
+                                            <a href="#">
+                                        <img src="{{cart_item.variant.variantimages.first.image.url}}" alt="Product image">
 
-                                            <h3 class="product-title">
-                                                <a href="#">{{ cart_item.variant.product.Product_name }}</a>
-                                            </h3><!-- End .product-title -->
-                                        </div><!-- End .product -->
+                                            </a>
+                                        </figure>
+                                        <p >{{ cart_item.variant.product.Product_name }}</p>
+                                    
+                                        
                                     </td>
-                                    
-                                    
-
 
                                     <td class="price-col">₹{{ cart_item.variant.price }}</td>
+                                    
+                                    <td class="price-col">
+                                        {% if cart_item.variant.offer_price %}
+                                          ₹{{ cart_item.variant.offer_price }}
+                                        {% else %}
+                                          ₹{{ cart_item.variant.price }}
+                                        {% endif %}
+                                      </td>
                                     <td class="quantity-col">
-                                            
+                                        <!--Quantity -->
                                         <div class="cart-product-quantity">
-                                            <input type="number" id="quantity" name="quantity" class="form-control quantity-input" value="{{ cart_item.variant_quantity }}" min="1" max="10" step="1" data-decimals="0" required >
+                                            <div style="display: flex; align-items: center;">
+                                                <button class="decrement" style="border: none;">-</button>
 
+                                                <input type="text" id="quantity" name="quantity" value="{{ cart_item.variant_quantity }}" min="1" 
+                                                style="width: 50px; text-align: center; border: none; " name="cartCount" class="cartCount">
+
+                                                <button class="increment" style="border: none;">+</button>
+                                            </div>
                                         </div>
+        
+                                        
                                             <!-- End .cart-product-quantity -->
                                     </td>
-                                    <td class="total-col">₹{{ cart_item.get_total }}</td>
+                                    {% if cart_item.variant.quantity >= cart_item.variant_quantity %}
+                                        <td class="stock-col"><span class="in-stock" style="color: rgb(4, 188, 22);">In stock</span></td>
+                                    {% else %}
+                                        <td class="stock-col"><span class="in-stock" style="color: red;">Not enough stock</span></td>
+                                    {% endif %}
+                                    
+                                    <td class="total-col"><span>₹ </span><span id="cart_item_total-{{cart_item.uid}}" >{{ cart_item.cart_item_total }}</span>
+                                    </td>
                                     <td class="remove-col"><button class="btn-remove"><a href="{% url 'remove_cart' cart_item.uid %}"><i class="icon-close"></i></a></button></td>
                                 </tr>
                                 <!--  -->
@@ -86,13 +113,19 @@
                                     {% endif %}
                                     {% csrf_token %}
                                     <div class="input-group">
-                                        <input type="text" name="coupon" class="form-control" required placeholder="coupon code">
+                                        <input type="text" name="coupon" class="form-control" required placeholder="Apply Coupon ">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-                                        </div><!-- .End .input-group-append -->
-                                    </div><!-- End .input-group -->
+                                        </div>
+                                    </div>
+                                    <!-- End .input-group -->
                                 </form>
+                                
+
                             </div><!-- End .cart-discount -->
+                            {% if cart.coupon %}
+                            <a href="{% url 'remove_coupon' cart.uid %}" class="btn btn-success">{{ cart.coupon.coupon_code }}</a>
+                            {% endif %}
 
                             <a href=" " class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
                         </div><!-- End .cart-bottom -->
@@ -111,12 +144,17 @@
 
                                     <tr class="summary-subtotal">
                                         <td>Subtotal:</td>
-                                        <td>₹ {{cart.cart_total}}</td>
+                                        <td id="sub_total">₹ {{cart.cart_items_total}}</td>
                                      </tr> 
+                                     {% if cart.coupon %}
                                      <tr class="summary-subtotal">
-                                        <td>Discount Amount:</td>
-                                        <td id="discountAmount">₹{{ coupon_obj.discount_price }}</td>
+                                        <td>coupon discount:</td>
+                                        <td id="discountAmount">₹{{ cart.coupon.discount_price }}</td>
+                                        
+                                        
                                     </tr>
+                                    
+                                    {% endif %}
                                     
                                         <!-- End .summary-subtotal  -->
                                     <tr class="summary-shipping">
@@ -145,14 +183,14 @@
 
                                     <tr class="summary-total">
                                         <td>Total:</td>
-                                        <td>₹ {{cart.cart_total}}</td>
+                                        <td id="cart_total">₹ {{cart.cart_total}}</td>
                                     </tr><!-- End .summary-total -->
                                 </tbody>
                             </table><!-- End .table table-summary -->
                             
                                 <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
                             
-                            <!-- <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a> -->
+                            <!-- <a href="{% url 'checkout' %}" class="btn btn-outline-primary-2 bt n-order btn-block">PROCEED TO CHECKOUT</a> -->
                         </div>
                         {% else %}
                         <img  src="{% static 'store/assets/images/demos/demo-4/final.png' %}" style="height: 350px; width: 35%; position: relative;left: 43rem;" alt="">
@@ -167,63 +205,128 @@
 </main><!-- End .main -->
 
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 <script>
+    // Increment quantity
+    $(document).on('click', '.increment', function() {
+        var quantityInput = $(this).prev('input[name="quantity"]');
+        var newQuantity = parseInt(quantityInput.val()) + 1;
+        console.log(newQuantity);
 
-function quantityInputs() {
-        if ( $.fn.inputSpinner ) {
-            $("input[type='number']").inputSpinner({
-                decrementButton: '<i class="icon-minus"></i>',
-                incrementButton: '<i class="icon-plus"></i>',
-                groupClass: 'input-spinner',
-                buttonsClass: 'btn-spinner',
-                buttonsWidth: '26px'
-            });
+        var cartItemId = $(this).closest('tr').data('cart-item-id');
+        updateQuantity(cartItemId, newQuantity, quantityInput);
+    });
+
+    // Decrement quantity
+    $(document).on('click', '.decrement', function() {
+        var quantityInput = $(this).next('input[name="quantity"]');
+        var newQuantity = parseInt(quantityInput.val()) - 1;
+        if (newQuantity < 1) {
+            newQuantity = 1;
         }
+        
+        var cartItemId = $(this).closest('tr').data('cart-item-id');
+        updateQuantity(cartItemId, newQuantity,quantityInput);
+    });
+
+    // AJAX function to update quantity
+    function updateQuantity(cartItemId, newQuantity, quantityInput) {
+        $.ajax({
+            type: "POST",
+            url: '/cart/updateCartItemQuantity/',
+            data: {
+                cart_item_id: cartItemId,
+                new_quantity: newQuantity,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(response) {
+            console.log(response);
+            if (response.status === 'error') {
+                // Display an alert for the "Not enough stock" message
+                alert(response.message);
+            } else if (response.cart_item_total && response.cart_total) {
+                // Update cart item total and cart total in the HTML
+                quantityInput.val(newQuantity);
+                $('#cart_item_total-'+cartItemId).text(response.cart_item_total);
+                $('#sub_total').text(response.sub_total);
+                $('#cart_total').text(response.cart_total);
+            }
+        
+            },
+        error: function(xhr, status, error) {
+            // Handle error response (if needed)
+        }
+        });
     }
-
-
-
-
 
 </script>
 
+<script>
+// $(document).ready(function() {
+//   $('.decrement').on('click', function() {
+//     var $qtyInput = $(this).closest('.cart-product-quantity').find('.cartCount');
+//     var currentValue = parseInt($qtyInput.val());
+
+//     if (currentValue > 1) {
+//       currentValue--;
+//       $qtyInput.val(currentValue);
+//       updateCartQuantity(currentValue);
+//     }
+//   });
+
+//   $('.increment').on('click', function() {
+//     var $qtyInput = $(this).closest('.cart-product-quantity').find('.cartCount');
+//     var currentValue = parseInt($qtyInput.val());
+
+//     currentValue++;
+//     $qtyInput.val(currentValue);
+//     updateCartQuantity(currentValue);
+//   });
+
+//   function updateCartQuantity(quantity) {
+//     var itemId = $('#quantity').data('item-id');
+
+//     $.ajax({
+//       type: 'POST',
+//       url: '/update_quantity',
+//       data: {
+//         variant_id: itemId,
+//         quantity: quantity,
+//         csrfmiddlewaretoken: '{{ csrf_token }}'
+//       },
+//       success: function(data) {
+//         if (data.status === 'error') {
+//           alert(data.message);
+//           $('#message').text(data.message);
+//         } else {
+//           console.log(data);
+//           $('#cart_total').text(data.total);
+//           $('#cartitems').text(data.cartitems);
+//           $('#sub-total-' + itemId).text(data.subtotal);
+//           console.log(data.subtotal);
+//           $('#grand_total').text(data.grand_total);
+//         }
+//       },
+//       error: function(xhr, textStatus, errorThrown) {
+//         $('#errorMessage').text('An error occurred while updating the cart.');
+//         $('#errorModal').modal('show');
+//       }
+//     });
+//   }
+// });</script>
 
 
-<!-- <script>
-    function updateQuantity(value) {
-        // Get the quantity input element
-        var quantityInput = document.getElementById('quantity');
-
-        // Update the quantity value
-        quantityInput.value = value;
-
-        // Update the price based on the new quantity
-        updatePrice();
-    }
-
-    function updatePrice() {
-        // Get the quantity value
-        var quantity = parseInt(document.getElementById('quantity').value);
-
-        // Get the price per item (assuming it's stored somewhere)
-        var pricePerItem = price; // Replace with the actual price per item
-
-        // Calculate the new price
-        var totalPrice = quantity * pricePerItem;
-
-        // Display the new price
-        document.getElementById('total-price').innerHTML = totalPrice;
-    }
-</script> -->
 
 
-    
-    
-    
-    
+
+
+
+
+
 
 
 {% endblock content %}

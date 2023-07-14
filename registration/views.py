@@ -233,7 +233,8 @@ from django.contrib.auth.models import AnonymousUser
 
 def shop(request):
     
-
+    categories = Category.objects.all()
+    # variants = Variant.objects.filter(is_listed=True)
     variants = Variant.objects.filter(is_listed=True)
 
     if request.user.is_authenticated:
@@ -264,6 +265,7 @@ def shop(request):
 
     context = {
         'variants': variants,
+        'categories':categories,
         'cart': cart,
         'cart_items': cart_items,
     }
@@ -280,7 +282,8 @@ def shop(request):
 
 
 def shop_by_category(request, category_name):
-
+    
+    categories = Category.objects.all()
     category = Category.objects.get(category_name=category_name)
 
     products = Product.objects.filter(category_id=category.uid)
@@ -313,6 +316,7 @@ def shop_by_category(request, category_name):
     #     variant.variant_id = variant.uid
 
     context = {
+        'categories':categories,
         'variants': variants,
         'cart': cart,
         'cart_items': cart_items,
@@ -323,59 +327,6 @@ def shop_by_category(request, category_name):
 
 
 
-# def shop(request):
-#     if request.user.is_authenticated:
-#         user = request.user
-#         is_guest_user = False
-#     else:
-#         user = AnonymousUser()
-#         is_guest_user = True
-
-#     variants = Variant.objects.filter(is_listed=True)
-
-#     if is_guest_user:
-#         if 'guest_user_id' not in request.session:
-#             # Generate a unique ID for the guest user
-#             guest_user_id = generate_unique_id()
-#             request.session['guest_user_id'] = guest_user_id
-#         else:
-#             guest_user_id = request.session['guest_user_id']
-
-#         try:
-#             # Retrieve or create the guest user
-#             guest_user = Account.objects.get(email='', is_guest=True)
-#         except Account.DoesNotExist:
-#             guest_user = Account.objects.create(email='', is_guest=True)
-
-#         cart = None  # No cart for guest users
-
-#     else:
-#         # Regular authenticated user
-#         guest_user = None
-
-#         try:
-#             cart = Cart.objects.get(user=user)
-#         except Cart.DoesNotExist:
-#             cart = Cart.objects.create(user=user)
-
-#     if cart:
-#         cart_items = Cartitems.objects.filter(cart=cart)
-#     else:
-#         cart_items = None
-    
-#     # Assign variant_id to the id attribute of each Variant
-#     for variant in variants:
-#         variant.variant_id = variant.uid
-    
-#     context = {
-#         'variants': variants,
-#         'cart': cart,
-#         'cart_items': cart_items,
-#     }
-
-#     response = render(request, 'store.html', context)
-
-#     return response
 
 
 

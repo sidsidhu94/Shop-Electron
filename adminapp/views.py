@@ -10,8 +10,11 @@ from django.core.exceptions import ValidationError
 # from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.views.decorators.cache import cache_control, never_cache
-
+from django.utils.dateparse import parse_date
+import datetime
+from django.utils import timezone
 from django.conf import settings
+from django.db.models import Count,Sum
 
 from django.contrib.auth import get_user_model
 
@@ -55,16 +58,20 @@ def admin_login(request):
             return render(request, 'admin_login.html')
 @never_cache    
 def dashboard(request):
-    if 'admin' in request.session:
-        user = Account.objects.filter(is_staff = False)
-        paginator = Paginator(user, 5)
-        page_number = request.GET.get('page')
-        paginated_users = paginator.get_page(page_number)
-        context = {
-            'users': paginated_users,
-            'paginated_users': paginated_users,
-        }
-        return render(request, 'dashboard.html', context)
+    if request.user.is_superuser:
+        orders = Order.objects.all()
+        total_orders = orders.count()
+        orders    = Order.objects.all().order_by('-id')
+        total_sales = orders.aggregate(Sum('total_price'))['total_price__sum']
+        
+        today = timezone.now().date()
+        daily_orders = Order.objects.filter(created_at__date=today).values('status').annotate(num_orders=Count('id')).order_by('status')
+        orders_today = daily_orders.aggregate(total_orders=Sum('num_orders'))['total_orders']
+        today_sales = daily_orders.aggregate(Sum('total_price'))['total_price__sum']
+
+        # print(orders_today)
+      
+        return render(request,'dashboard.html',locals())
     else:
         return redirect('admin_login')
     
@@ -236,6 +243,31 @@ def unlist_product(request, product_id):
     
     return redirect('product')
 
+def update_product(request,product_id):
+    product = Product.objects.get(uid = product_id)
+    categories = Category.objects.all()
+    
+    if request.method == "POST":
+        product_name = request.POST.get('Product_name')
+        
+        prodct_description = request.POST.get('prodct_description')
+        image = request.FILES.get('image')
+
+        product.Product_name = product_name
+        product.prodct_description = prodct_description
+        product.image = image
+        product.save()
+
+        return redirect('product') 
+
+    context = {
+        'product': product
+    }
+
+    return render(request, 'product.html', context)
+
+
+
  ######################### VARIANTS  #########################    
 
 def variants(request):
@@ -318,6 +350,27 @@ def unlist_variants(request, variants_id):
     
     return redirect('variants')
 
+def update_variants(request,variants_id):
+    variants = Variant.objects.get(uid = variants_id)
+    categories = Category.objects.all()
+    
+    if request.method == 'POST':
+        
+        price = request.POST.get('price')
+        quantity = request.POST.get('quantity')
+        
+        variants.price = price
+        variants.quantity = quantity
+        variants.save()
+        
+
+        return redirect('variants') 
+
+    context = {
+        'variants': variants
+    }
+
+    return render(request, 'variant.html', context)
 
 
  ######################### COLOR  #########################    
@@ -459,3 +512,28 @@ def add_product_offer(request):
         )
 
         return redirect('product')
+    
+def add_coupon(request):
+    if request.method == "POST":
+        coupon_code = request.POST.get("coupon_code")
+        discount_price = request.POST.get("discount_price")
+        minimum_amount = request.POST.get("minimum_amount")
+        
+       
+        
+        coupon = Coupon.objects.create(
+            coupon_code = coupon_code,
+            discount_price = discount_price,
+            minimum_amount = minimum_amount,
+            
+        )
+
+        return redirect('coupon')
+
+def coupon(request):
+    coupons = Coupon.objects.all()
+    context = {
+        'coupons': coupons
+    }
+
+    return render(request,'coupon.html', context)

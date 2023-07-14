@@ -37,7 +37,12 @@
                         <td>{{ variant.screensize.screensize }}</td>
                         <td>{{ variant.price }}</td>
                         <td>{{ variant.quantity }}</td>
-                        <td></td>
+                        <td>
+                            <a href="#staticBackdrop{{ variant.uid }}" class="edit-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ variant.uid }}">
+                                <i class="fas fa-pencil-alt fa-lg"></i>
+
+                            </a>
+                        </td>
                         <td>
                             {% if variants.is_listed %}
                                 <form action="{% url 'unlist_variants' variant.uid %}" method="post">
@@ -64,5 +69,41 @@
 </div>
 </div>
 </div>
-  
+
+
+  <!-- Edit Modal -->
+  {% for variant in variants %}
+  <div class="modal fade" id="staticBackdrop{{ variant.uid }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">Edit variant</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="edit_variant_{{ variant.id }}" method="post" action="{% url 'update_variants' variant.uid %}" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      
+                      
+                    
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="text" class="form-control" id="price" name="price">
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="text" class="form-control" id="quantity" name="quantity">
+                    </div>
+                    
+                      <!-- Add other product form fields here -->
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Update Variant</button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
 {% endblock content %}
