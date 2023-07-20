@@ -8,7 +8,8 @@ $(document).ready(function () {
         if (!selectedAddressId) {
             alert("All fields are mandatory");
             return false;
-        } else {
+        } 
+        else {
             $.ajax({
                 method: "GET",
                 url: "/checkout/proceed_to_pay/",

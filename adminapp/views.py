@@ -33,6 +33,7 @@ import string
 
 # Create your views here.
 @cache_control(on_cache = True, must_revalidate = True, no_store = True)
+
 def admin_login(request):
     if 'admin' in request.session:
         return redirect('dashboard')
@@ -56,6 +57,7 @@ def admin_login(request):
 
 
             return render(request, 'admin_login.html')
+
 @never_cache    
 def dashboard(request):
     if request.user.is_superuser:
@@ -198,8 +200,6 @@ def product(request):
         'products': products,'categories': categories
         }
     return render(request, 'product.html', context)
-
-
 
 
 
@@ -386,8 +386,9 @@ def color(request):
 def add_color(request):
     if request.method == 'POST':
         color_name = request.POST.get('color_name')
+        color_code = request.POST.get('color_code')
         if color_name:
-            color = Color(color_name=color_name)
+            color = Color(color_name=color_name,color_code=color_code)
             color.save()
             return redirect('color') 
     return render(request, 'add_color.html')
@@ -442,13 +443,18 @@ def add_screensize(request):
 
 def search(request):
     query = request.GET.get('q')
-    results = []
+
+    print(query)
+    
     
     if query:
         results = Account.objects.filter(username__icontains=query)
+        print(results)
     
+    else:
+        results = []
     context = {
-        "user": results,
+        "users": results,
         "query": query,
     }
     return render(request, 'user.html', context)
@@ -512,7 +518,8 @@ def add_product_offer(request):
         )
 
         return redirect('product')
-    
+
+
 def add_coupon(request):
     if request.method == "POST":
         coupon_code = request.POST.get("coupon_code")
@@ -530,10 +537,25 @@ def add_coupon(request):
 
         return redirect('coupon')
 
+
 def coupon(request):
-    coupons = Coupon.objects.all()
+    coupons = Coupon.objects.all().order_by('uid')
     context = {
         'coupons': coupons
     }
 
     return render(request,'coupon.html', context)
+
+def coupon_expired(request, coupon_id):
+    coupon = Coupon.objects.get(uid=coupon_id)
+    coupon.is_expired = True
+    coupon.save()
+    
+    return redirect('coupon')
+
+def coupon_list(request, coupon_id):
+    coupon = Coupon.objects.get(uid=coupon_id)
+    coupon.is_expired = False
+    coupon.save()
+    
+    return redirect('coupon')

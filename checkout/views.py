@@ -92,10 +92,10 @@ def placeorder(request):
         while Order.objects.filter(tracking_no=trackno).exists():
             trackno = str(random.randint(111111, 999999))
         neworder.tracking_no = trackno
-        neworder.save()
+        
 
         cartitem = Cartitems.objects.filter(cart=cart)
-        insufficient_stock = False  # Track if any item has insufficient stock
+        insufficient_stock = False  
 
         for item in cartitem:
             variant = item.variant
@@ -132,6 +132,8 @@ def placeorder(request):
         elif payMode == "COD":
             return JsonResponse({'status': 'Your order has been placed successfully'})
 
+
+
         if cart.coupon:
             neworder.coupon = cart.coupon
 
@@ -149,136 +151,6 @@ def placeorder(request):
 
 
 
-# def placeorder(request): this is the correct code
-#     if request.method == "POST":
-#         neworder = Order()
-#         neworder.user = request.user
-#         neworder.name = request.user.username
-#         address_id = request.POST.get('selection')
-#         neworder.address = Address.objects.get(id=address_id)
-#         neworder.payment_mode = request.POST.get('payment_mode')
-#         cart = Cart.objects.get(user=request.user)
-#         total_price = cart.cart_total
-#         neworder.total_price = total_price
-#         neworder.total_price_in_paise = neworder.total_price * 100
-#         neworder.payment_method = request.POST.get('payment_mode')
-#         neworder.payment_id = request.POST.get('payment_id')
-#         trackno = str(random.randint(111111, 999999))
-#         while Order.objects.filter(tracking_no=trackno).exists():
-#             trackno = str(random.randint(111111, 999999))
-#         neworder.tracking_no = trackno
-#         if cart.coupon:
-#             neworder.coupon = cart.coupon
-            
-#         neworder.save()
-#         cartitem = Cartitems.objects.filter(cart=cart)
-#         insufficient_stock = False  # Track if any item has insufficient stock
-
-#         for item in cartitem:
-#             variant = item.variant
-            
-#             if variant.quantity >= item.variant_quantity:
-#                 variant.quantity -= int(item.variant_quantity)
-#                 variant.save()
-                
-#                 orderitem = Orderitem.objects.create(
-#                     order=neworder,
-#                     variant=item.variant,
-#                     price=item.variant.price,
-#                     order_quantity=item.variant_quantity,
-#                 )
-#                 orderitem.save()
-                
-#                 item.delete()  # Remove the item from the cart
-#             else:
-#                 insufficient_stock = True
-#                 item.delete()  # Remove the item from the cart
-#                 messages.warning(request, f"Not enough stock: {variant.variant_name}")
-
-#         if insufficient_stock:
-#             messages.error(request, "Some items are out of stock. Please review your cart.")
-#             return redirect('cart')  # Redirect back to the cart page if any item is out of stock
-
-#         messages.success(request, "Your order has been placed.")
-
-#         payMode = request.POST.get('payment_mode')
-#         if payMode == "Razorpay":
-#             return JsonResponse({'status': 'Your order has been placed successfully'})
-#         elif payMode == "COD":
-#             return JsonResponse({'status': 'Your order has been placed successfully'})
-
-        
-
-#         if cart.coupon:
-#             neworder.coupon = cart.coupon
-
-#             print(neworder.coupon,"#########################################################################")
-#             coupon = cart.coupon
-            
-#             coupon.is_applied = True
-#             coupon.save()
-
-#             cart.coupon = None
-#             cart.save()
-            
-          
-           
-#     return redirect('home')
-
-
-
-# def placeorder(request):
-#     if request.method == "POST":
-#         neworder = Order()
-
-#         neworder.user = request.user
-#         neworder.name = request.user.username
-
-#         address_id = request.POST.get('selection')
-#         neworder.address = Address.objects.get(id=address_id)
-#         neworder.payment_mode = request.POST.get('payment_mode')
-
-#         cart = Cart.objects.get(user=request.user)
-#         total_price = cart.cart_total
-
-#         neworder.total_price = total_price
-#         neworder.total_price_in_paise = neworder.total_price * 100
-
-#         neworder.payment_method = request.POST.get('payment_mode')
-#         neworder.payment_id = request.POST.get('payment_id')
-
-#         trackno =   str(random.randint(111111, 999999))
-#         while Order.objects.filter(tracking_no=trackno).exists():
-#             trackno =  str(random.randint(111111, 999999))
-
-#         neworder.tracking_no = trackno
-#         neworder.save()
-
-#         cartitem = Cartitems.objects.filter(cart=cart)
-
-#         for item in cartitem:
-#             variant = item.variant
-#             variant.quantity -= int(item.variant_quantity)
-#             variant.save()
-
-#             orderitem = Orderitem.objects.create(
-#                 order=neworder,
-#                 variant=item.variant,
-#                 price=item.variant.price,
-#                 order_quantity=item.variant_quantity,
-#             )
-#             orderitem.save()
-
-#         cartitem.delete()
-#         messages.success(request, "Your order has been placed.")
-
-#         payMode = request.POST.get('payment_mode')
-#         if payMode == "Razorpay":
-#             return JsonResponse({'status': 'Your order has been placed successfully'})
-
-#     return redirect('home')
-
-
 
 @login_required
 def razorpaycheck(request):
@@ -290,11 +162,21 @@ def razorpaycheck(request):
     })
 
 def orders(request):
-    orders = Order.objects.filter(user = request.user)  # Fetch all orders from the database
+    orders = Order.objects.filter(user = request.user) 
     context = {'orders': orders}
     return render(request, 'orders.html', context)
 
 
+def order_details(request,order_id):
+    
+    order_items = Orderitem.objects.filter(order_id=order_id)
+    print(order_items)
+    
+    context = {
+        'order_items': order_items,
+    }
+
+    return render(request,'order_details.html',context)
 
 
 
@@ -395,52 +277,6 @@ def orders(request):
 #     return redirect('home')
 
 
-
-# def placeorder(request):
-#     if request.method == "POST":
-#         neworder = Order()
-#         neworder.user = request.user
-#         neworder.address = request.POST.get(address = request.address)
-#         neworder.payment_mode = request.POST.get('payment_mode')
-
-#         print(neworder.address,"############################")
-
-
-#         cart = Cart.objects.filter(user = request.user)
-#         total_price = 0
-#         for item in cart:
-#             total_price = sum(item.variant.price * item.variant_quantity)
-
-#         neworder.total_price = total_price
-
-#         trackno = "shop@electron"+str(random.randint(111111,999999))
-#         while Order.objects.filter(traking_no = trackno) is None:
-#             trackno = "shop@electron"+str(random.randint(111111,999999)) 
-        
-#         neworder.tracking_no = trackno
-
-#         neworder.save()
-
-#         neworderitems = Cart.objects.filter(user = request.user)
-#         for item in neworderitems:
-#             Orderitem.objects.create(
-#                 order = neworder,
-#                 variant = item.variant,
-#                 price = item.variant.price,
-#                 quantity = item.quantity,
-#             )
-
-#             orderproduct = Variant.objects.filter(id = item.variant.uid).first()
-#             orderproduct.quantity = orderproduct.quantity - item.quantity
-#             orderproduct.save()
-
-#         Cart.objects.filter(user = request.user).delete()
-
-#         messages.success(request,"Your order has been placed")
-
-
-
-#     return redirect('home')
 
 # def add_address(request):
 

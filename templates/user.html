@@ -2,6 +2,16 @@
 
 {% block content %}
   
+<form class="" method="get" action="{% url 'search' %}">
+    {% csrf_token %}
+    <div class="search-block d-flex align-items-center justify-content-end" style="max-height: 50px">
+<input class="form-control m-0 p-0 text-center" name="q" type="search" placeholder="Search" style="width: 300px; height: 30px ;">
+
+<button id="search-btn" class="btn btn-default" type="submit">
+    <i class="material-icons">search</i>
+</button>
+</div>
+</form>
 <div class="col-12 mt-5 ml-3">
     <div class="bg-light rounded h-100 p-4" style="margin-left: 20px;
     margin-right: 20px;">

@@ -19,6 +19,7 @@
                         <th scope="col">COUPON CODE </th>
                         <th scope="col">DISCOUNT PRICE </th>
                         <th scope="col">MINIMUM AMOUNT </th>
+                        <th scope="col">COUPON EXPIRY </th>
 
                         <!-- <th scope="col">IMAGE</th> -->
                         <!-- <th scope="col">MOBILE</th> -->
@@ -34,6 +35,20 @@
                         <td>{{ coupon.coupon_code }}</td>
                         <td>{{ coupon.discount_price }}</td>
                         <td>{{ coupon.minimum_amount }}</td>
+                        <td>
+                            {% if coupon.is_expired %}
+                                <form action="{% url 'coupon_list' coupon.uid %}" method="post">
+                                    {% csrf_token %}
+                                    <!-- <button type="submit" style="color: red;">Unlist</button> -->
+                                    <button type="submit" style="color: red;">unList</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'coupon_expired' coupon.uid %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" style="color: green;">List</button>
+                                </form>
+                            {% endif %}
+                        </td>
                         
                     </tr>
                     {% endfor %}

@@ -6,19 +6,19 @@ from .models import Address
 # Create your views here.
 
 
-def profile(request):
-
-    return render(request, 'profile.html')
-
-
 # def profile(request):
-#     user_id = request.user.id
-#     addresses = Address.objects.filter(user_id_id=user_id)
 
-#     context = {
-#         'addresses': addresses
-#     }
-#     return render(request, 'profile.html', context)
+#     return render(request, 'profile.html')
+
+
+def profile(request):
+    user_id = request.user.id
+    addresses = Address.objects.filter(user_id=user_id)
+
+    context = {
+        'addresses': addresses
+    }
+    return render(request, 'profile.html', context)
 
 
 

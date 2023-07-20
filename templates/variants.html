@@ -44,7 +44,7 @@
                             </a>
                         </td>
                         <td>
-                            {% if variants.is_listed %}
+                            {% if variant.is_listed %}
                                 <form action="{% url 'unlist_variants' variant.uid %}" method="post">
                                     {% csrf_token %}
                                     <!-- <button type="submit" style="color: red;">Unlist</button> -->

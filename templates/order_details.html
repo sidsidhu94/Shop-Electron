@@ -1,0 +1,44 @@
+{% extends "store_base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+
+<div class="page-content">
+    <div class="container">
+        <table class="table table-wishlist table-mobile">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>quantity</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            {% for order_item in order_items %}
+                
+                
+                <td class="product-col">
+                    
+                    <div class="product">
+                        <h3 class="product-title">
+                            {{ order_item.variant.variant_name }}
+                        </h3>
+                    </div> 
+                </td> 
+                <td>{{ order_item.price}}</td>
+                <td>{{ order_item.order_quantity}}</td>
+        
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+{% endblock %}

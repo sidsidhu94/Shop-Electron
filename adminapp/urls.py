@@ -68,5 +68,7 @@ urlpatterns = [
 
   path('coupon/',views.coupon, name ='coupon'),
   path('add_coupon/',views.add_coupon, name ='add_coupon'),
+  path('coupon_expired/<str:coupon_id>/', views.coupon_expired, name='coupon_expired'),
+  path('coupon_list/<str:coupon_id>/', views.coupon_list, name='coupon_list'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

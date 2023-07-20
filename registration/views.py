@@ -278,9 +278,6 @@ def shop(request):
 
 
 
-
-
-
 def shop_by_category(request, category_name):
     
     categories = Category.objects.all()
@@ -323,8 +320,6 @@ def shop_by_category(request, category_name):
     }
     return render(request, 'store.html', context)
     
-
-
 
 
 

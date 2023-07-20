@@ -62,6 +62,7 @@ class VariantImage(BaseModel):
  
 class Color(BaseModel):
     color_name                  = models.CharField(max_length=30)
+    color_code                  = models.CharField(max_length=7,null=True)
     
     def __str__(self):
         return self.color_name
