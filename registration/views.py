@@ -103,7 +103,7 @@ def register_view(request, *args, **kwargs):
             return redirect('verify_otp')
 
         else:
-            context['registrcoation_form'] = form
+            context['registration_form'] = form
 
     return render(request, 'register.html', context)
 
