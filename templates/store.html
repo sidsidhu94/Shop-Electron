@@ -63,7 +63,7 @@ Store
                                         {% endif %}
 
                                         <a href="{% url 'productdetails' variant.uid %}">
-                                            <img src="{{ variant.variantimages.first.image.url }}" alt="Product image" class="product-image">
+                                            <img src="{{ variant.product.image.url }}" style="width: 300px; height: 200px;" alt="Product image" class="product-image">
                                         </a>
 
                                         <div class="product-action-vertical">
