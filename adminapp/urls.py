@@ -28,8 +28,8 @@ urlpatterns = [
   path('update_product/<str:product_id>/', views.update_product, name='update_product'),
 
     ##..........category side..........## 
-  path('category',views.category, name='category'),
-  path('add_category/',views.add_category, name ='add_category'),
+  path('admin/category/',views.category, name='category'),
+  path('admin/add_category/',views.add_category, name ='add_category'),
   path('delete_category/<str:category_id>/',views.delete_category,name = 'delete_category' ),
   path('update_category/<str:category_id>/', views.update_category, name='update_category'),
   path('list_category/<str:category_id>/', views.list_category, name='list_category'),
