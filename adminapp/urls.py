@@ -10,7 +10,7 @@ urlpatterns = [
 
 
       ##..........admin side..........##
-  path('',views.admin_login, name="admin_login"),
+  path('admin/',views.admin_login, name="admin_login"),
   path('dashboard/',views.dashboard, name='dashboard'),
   path('admin_logout/',views.admin_logout, name ='admin_logout'),
   

@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('og-admin/', admin.site.urls),
     path('',include('registration.urls')),
-    path('admin/',include('adminapp.urls')),
+    path('',include('adminapp.urls')),
     path('cart/', include(('cart.urls'))),
     path('checkout/', include(('checkout.urls'))),
     path('profile/',include('userprofile.urls')),
