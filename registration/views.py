@@ -82,6 +82,7 @@ def register_view(request, *args, **kwargs):
     if user.is_authenticated:
         return HttpResponse(f"You are already authenticated as {user.email}.")
 
+     
     context = {}
 
     if request.method == 'POST':
@@ -118,6 +119,9 @@ def verify_otp(request):
             user = Account.objects.get(email=email)
             user.is_active = True
             user.save()
+
+            
+
             messages.success(request, 'Congratulations! Your account is verified.')
             return redirect('home')
         else:
@@ -240,11 +244,19 @@ def shop(request):
     if request.user.is_authenticated:
         user = request.user
         is_guest_user = False
-        try:
-            cart = Cart.objects.get(user=user)
-        except Cart.DoesNotExist:
+        carts = Cart.objects.filter(user=user)
+
+        if carts.exists():
+            cart = carts.first()
+        else:
             cart = Cart.objects.create(user=user)
+
         cart_items = Cartitems.objects.filter(cart=cart)
+        # try:
+        #     cart = Cart.objects.get(user=user)
+        # except Cart.DoesNotExist:
+        #     cart = Cart.objects.create(user=user)
+        # cart_items = Cartitems.objects.filter(cart=cart)
     else:
         user = AnonymousUser()
         is_guest_user = True
@@ -289,10 +301,13 @@ def shop_by_category(request, category_name):
     if request.user.is_authenticated:
         user = request.user
         is_guest_user = False
-        try:
-            cart = Cart.objects.get(user=user)
-        except Cart.DoesNotExist:
+        carts = Cart.objects.filter(user=user)
+
+        if carts.exists():
+            cart = carts.first()
+        else:
             cart = Cart.objects.create(user=user)
+
         cart_items = Cartitems.objects.filter(cart=cart)
     else:
         user = AnonymousUser()

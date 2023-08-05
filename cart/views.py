@@ -14,12 +14,19 @@ import json
 
 def cart(request):
     user = request.user
-    cart = Cart.objects.get(user = user)
+    cart = Cart.objects.filter(user = user)
+    if not cart.exists():
+        # Handle the case when no carts are found for the user.
+        # For example, you might want to create a new cart for the user here.
+        cart = Cart.objects.create(user=user)
+    else:
+        cart = cart.first()
+
     cart_items = Cartitems.objects.filter(cart = cart)
     print(cart)
     subtotal = 0
     total = 0
-    
+
     for cart_item in cart_items:
         subtotal += cart_item.variant.price * cart_item.variant_quantity
         
