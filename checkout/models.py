@@ -4,6 +4,7 @@ from products.models import Variant,Coupon
 from userprofile.models import *
 from datetime import timedelta,datetime
 
+
 # Create your models here.
 
 
@@ -48,10 +49,16 @@ class Order(models.Model):
     
 
 class Orderitem(models.Model):
+    refund_status = (
+        ("requested","return requested"),
+        ("intiated","refund initiated"),
+        ("refunded" ,"refunded"),
+         )
     order = models.ForeignKey(Order , on_delete=models.CASCADE)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     price = models.FloatField(null = False)
     order_quantity = models.IntegerField(null = False)
+    refund_status = models.CharField(max_length=20,choices=refund_status,default="requested")
 
     # def __str__(self):
     #     return '{}-{}',format(self.order.id , self.order.tracking_no)

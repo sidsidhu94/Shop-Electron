@@ -1,10 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import login,authenticate, logout
 from registration.forms import RegistrationForm,AccountAuthenticationForm
 from django.contrib import messages
 from registration.models import Account
-from checkout.models import Order
+from userprofile.models import Wallet
+from checkout.models import Order,Orderitem
+import decimal
+from decimal import Decimal
 from products.models import *
 from django.core.exceptions import ValidationError
 # from django.contrib.auth.models import User
@@ -559,3 +562,22 @@ def coupon_list(request, coupon_id):
     coupon.save()
     
     return redirect('coupon')
+
+def update_refund_status(request, order_id):
+    if request.method == 'POST':
+        print('update_refund_status')
+        print(order_id)
+        order_product = Orderitem.objects.get(order_id = order_id)
+        order_product.refund_status = 'refunded'
+        order_product.save()
+
+
+            # Add the refunded amount to the user's wallet
+        print(order_product.order.user,'herererer')
+        user_wallet, _ = Wallet.objects.get_or_create(user=order_product.order.user)
+        user_wallet.balance +=  Decimal(str(order_product.price * order_product.order_quantity))
+        user_wallet.save()
+
+        return redirect('admin_orders')  # Redirect to a success page or appropriate URL
+
+    return redirect('admin_orders')

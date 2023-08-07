@@ -13,7 +13,7 @@
                     <th>Product</th>
                     <th>Price</th>
                     <th>quantity</th>
-                    <th></th>
+                    <th>return</th>
                     <th></th>
                 </tr>
             </thead>
@@ -32,8 +32,26 @@
                 </td> 
                 <td>{{ order_item.price}}</td>
                 <td>{{ order_item.order_quantity}}</td>
-        
+                {{ order_item.order_id}}
+                <td>
+                    {% if order_item.show_return_button %}
+								
+                                {% if order_item.refund_status == 'requested'%}
+								<form method="post" action="{% url 'cancel_order' order_item.order_id %}">
+									{% csrf_token %}
+			
+									
+									<button type="submit">Return</button>
+									
+								</form>
+								{% else %}
+								<p>{{ order_item.refund_status}}</p>
+                                {% endif %}
+                              {% endif %}
             {% endfor %}
+
+                </td>
+                
             </tbody>
         </table>
     </div>

@@ -142,7 +142,7 @@
                         </div>
                         {% endif %}
                         <!-- End .compare-dropdown -->
-
+                        {% if user.is_authenticated %}
                         <div class="dropdown cart-dropdown">
                             <a href="{% url 'cart' %}" class="dropdown-toggle"  aria-expanded="false" data-display="static">
                                 <div class="icon">
@@ -181,7 +181,7 @@
                                 <div class="dropdown-cart-total">
                                     <span>Total</span>
 
-                                    <span class="cart-total-price">$160.00</span>
+                                    <span class="cart-total-price"></span>
                                 </div><!-- End .dropdown-cart-total -->
 
                                 <div class="dropdown-cart-action">
@@ -190,6 +190,7 @@
                                 </div><!-- End .dropdown-cart-total -->
                             </div><!-- End .dropdown-menu -->
                         </div><!-- End .cart-dropdown -->
+                        {% endif %}
                         <div class="header-right">
                             {% if user.is_authenticated %}
                                 <div class="wishlist">
@@ -225,16 +226,16 @@
                                     <div class="col-md-6">
                                       <div class="row d-flex" style=" width: 400px;">
                                         <div class="m-2" >
-                                          <div class="menu-title">Brand</div>
-                                          <!-- End .menu-title -->
+                                          <!-- <div class="menu-title"></div>
+                                          
                                           <ul>
-                                            <li><a href="category-list.html"></a>aaaaaa</li>
+                                            <li><a href="category-list.html"></a></li>
                                             <li>
                                               <a href="category-2cols.html"
                                                 >Shop Grid 2 Columns</a
                                               >
                                             </li>
-                                          </ul>
+                                          </ul> -->
                                         </div>
                                         <div class="m-2" >
                                           <div class="menu-title">Category</div>

@@ -16,17 +16,7 @@
                 <li class="breadcrumb-item active" aria-current="page">Extended Description</li>
             </ol>
 
-            <nav class="product-pager ml-auto" aria-label="Product">
-                <a class="product-pager-link product-pager-prev" href="#" aria-label="Previous" tabindex="-1">
-                    <i class="icon-angle-left"></i>
-                    <span>Prev</span>
-                </a>
-
-                <a class="product-pager-link product-pager-next" href="#" aria-label="Next" tabindex="-1">
-                    <span>Next</span>
-                    <i class="icon-angle-right"></i>
-                </a>
-            </nav><!-- End .pager-nav -->
+           
         </div><!-- End .container -->
     </nav><!-- End .breadcrumb-nav -->
 
@@ -81,38 +71,38 @@
                                 <p>{{ details.product.prodct_description}} </p>
                             </div><!-- End .product-content -->
 
-                            <div class="details-filter-row details-row-size">
-                                <label>Color:</label>
+                            <div >
+                                <label>Color: {{ details.color.color_name}}</label>
 
-                                <div class="product-nav product-nav-dots">
+                                <!-- <div class="product-nav product-nav-dots">
                                     <a href="#" class="active" style="background: #eab656;"><span class="sr-only">Color </span></a>
                                     <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
                                     <a href="#" style="background: #3a588b;"><span class="sr-only">Color name</span></a>
                                     <a href="#" style="background: #caab97;"><span class="sr-only">Color name</span></a>
-                                </div><!-- End .product-nav -->
-                            </div><!-- End .details-filter-row -->
+                                </div> -->
+                            </div>
 
-                            <div class="details-filter-row details-row-size">
-                                <label for="size">Storage:</label>
+                            <div >
+                                <label for="size">Storage:   {{details.storage.memory}}</label>
                                 <div class="select-custom">
-                                    <select name="size" id="size" class="form-control">
+                                    <!-- <select name="size" id="size" class="form-control">
                                         <option value="#" selected="selected">Select a storage</option>
-                                        <option value="s">{{details.storage.memory}}</option>
+                                        <option value="s">{{details.storage.memory}}</option> -->
                                         <!-- <option value="m">Medium</option>
                                         <option value="l">Large</option>
                                         <option value="xl">Extra Large</option> -->
-                                    </select>
+                                    <!-- </select> -->
                                 </div><!-- End .select-custom -->
 
                                 
                             </div><!-- End .details-filter-row -->
 
-                            <div class="details-filter-row details-row-size">
+                            <!-- <div class="details-filter-row details-row-size">
                                 <label for="qty">Qty:</label>
                                 <div class="product-details-quantity">
                                     <input type="number" id="qty" class="form-control" value="1" min="1" max="10" step="1" data-decimals="0" required>
-                                </div><!-- End .product-details-quantity -->
-                            </div><!-- End .details-filter-row -->
+                                </div>
+                            </div> -->
 
                             <div class="product-details-action">
                                 <a href="{% url 'add_to_cart' details.uid %}" class="btn-product btn-cart"><span>add to cart</span></a>
@@ -124,7 +114,7 @@
                             </div><!-- End .product-details-action -->
 
                             <div class="product-details-footer">
-                                <div class="product-cat">
+                                <div class="product-cat" >
                                     <span>Category:</span>
                                     <a href="#">{{details.product.category.category_name }}</a>
                                     

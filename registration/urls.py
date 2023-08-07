@@ -22,6 +22,7 @@ urlpatterns = [
 
   path('shop/',views.shop, name= "shop"),
   path('shop_by_category/<str:category_name>/', views.shop_by_category, name='shop_by_category'),
+  path('shop_by_price', views.shop_by_price, name='shop_by_price'),
   path('productdetails/<str:variant_id>/', views.productdetails, name='productdetails'),
   path('verify_otp/',verify_otp, name= "verify_otp"),
   

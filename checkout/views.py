@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from cart.models import *
@@ -7,9 +7,11 @@ from userprofile.models import *
 from .models import Address, Order, Orderitem
 from django.conf import settings
 from django.http import JsonResponse
-
+from datetime import timedelta,timezone
+from django.utils import timezone
 import razorpay
 import random
+
 
 
 # Create your views here.
@@ -71,7 +73,7 @@ def add_address(request):
 
         return redirect('profile')  
 
-    return render(request, 'checkout')
+    return render(request, 'add_address.html')
 
 
 def placeorder(request):
@@ -83,6 +85,7 @@ def placeorder(request):
         neworder.address = Address.objects.get(id=address_id)
         neworder.payment_mode = request.POST.get('payment_mode')
         cart = Cart.objects.get(user=request.user)
+        print(cart,'3333333333###########################################################3##')
         total_price = cart.cart_total
         neworder.total_price = total_price
         neworder.total_price_in_paise = neworder.total_price * 100
@@ -92,7 +95,8 @@ def placeorder(request):
         while Order.objects.filter(tracking_no=trackno).exists():
             trackno = str(random.randint(111111, 999999))
         neworder.tracking_no = trackno
-        
+        neworder.save()
+        print(neworder,"#################################################")
 
         cartitem = Cartitems.objects.filter(cart=cart)
         insufficient_stock = False  
@@ -110,7 +114,7 @@ def placeorder(request):
                     price=item.variant.price,
                     order_quantity=item.variant_quantity,
                 )
-                orderitem.save()
+                # orderitem.save()
                 
                 
                 item.delete()  # Remove the item from the cart
@@ -170,14 +174,51 @@ def orders(request):
 def order_details(request,order_id):
     
     order_items = Orderitem.objects.filter(order_id=order_id)
-    print(order_items)
+    print(order_items,"###############################################")
+    for order_item in order_items:
+        print(order_item.refund_status )
+        # Check if the order status is 'Delivered'
+        if order_item.order.status.strip() == 'Delivered':
+            # Calculate the date 30 days ago from now
+            thirty_days_ago = timezone.now() - timedelta(days=30)
+            print("asdsdsadasdadadasd")
+            print(thirty_days_ago)
+            # Check if the order was created within the last 30 days
+            if order_item.order.created_at > thirty_days_ago:
+                order_item.show_return_button = True
+            else:
+                order_item.show_return_button = False
+        else:
+            order_item.show_return_button = False
+        print(order_item.show_return_button )
+    # print(order_items.orderstatus)
+    # print(order_items.created_at)
     
-    context = {
-        'order_items': order_items,
-    }
+        context = {
+            'order_items': order_items,
+        }
 
     return render(request,'order_details.html',context)
 
+def cancel_order(request,order_id):
+    
+    print(order_id)
+    print('haiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+    if request.method == 'POST':
+        order_product = get_object_or_404(Orderitem, order_id=order_id)
+        print(order_product)
+
+        # Check if the order product is eligible for refund
+        if order_product.refund_status == 'requested':
+            # Mark the order product as refund initiated
+            order_product.refund_status = 'intiated'
+            order_product.save()
+
+            # Perform any additional refund initiation logic here
+            
+            return redirect('orders')  # Redirect to a success page after refund initiation
+
+    return redirect('orders')
 
 
 # def placezzorder(request): this is right 

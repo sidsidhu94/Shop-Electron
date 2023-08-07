@@ -15,12 +15,15 @@ import json
 def cart(request):
     user = request.user
     cart = Cart.objects.filter(user = user)
+    print(user,"##################################################superuser.....")
     if not cart.exists():
         # Handle the case when no carts are found for the user.
         # For example, you might want to create a new cart for the user here.
         cart = Cart.objects.create(user=user)
+        print(cart,'else block')
     else:
         cart = cart.first()
+        print(cart,"#333333333")
 
     cart_items = Cartitems.objects.filter(cart = cart)
     print(cart)
@@ -92,6 +95,7 @@ def add_to_cart(request, variant_id):
         variant = Variant.objects.get(uid=variant_id)
         user = request.user
         cart, created = Cart.objects.get_or_create(user=user, is_paid=False)
+        print(cart,"######################################################3")
         
         # Retrieve all matching Cartitems objects
         cart_items = Cartitems.objects.filter(cart=cart, variant=variant)
@@ -103,6 +107,7 @@ def add_to_cart(request, variant_id):
         else:
             # If no objects exist, create a new Cartitems object
             cart_item = Cartitems.objects.create(cart=cart, variant=variant, variant_quantity=1)
+        print(cart_item,"##################################################################33")
 
         return redirect('shop')
     

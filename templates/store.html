@@ -122,6 +122,7 @@ Store
                                 </div><!-- End .product -->
                             </div><!-- End .col-sm-6 col-lg-4 -->
                         {% endfor %}
+                        
                             
 
                            
@@ -131,20 +132,39 @@ Store
 
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
-                                    <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
-                                </a>
-                            </li>
-                            <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item-total">of 6</li>
-                            <li class="page-item">
-                                <a class="page-link page-link-next" href="#" aria-label="Next">
-                                    Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
-                                </a>
-                            </li>
+                            {% if variants.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="First">
+                                        <span aria-hidden="true">&laquo;&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ variants.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+        
+                            {% for num in variants.paginator.page_range %}
+                                {% if variants.number == num %}
+                                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+        
+                            {% if variants.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ variants.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ variants.paginator.num_pages }}" aria-label="Last">
+                                        <span aria-hidden="true">&raquo;&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </nav>
                 </div><!-- End .col-lg-9 -->
@@ -157,11 +177,7 @@ Store
 
                        
 
-                        <div class="widget widget-collapsible">
-                            <h3 class="widget-title">
-                                <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
-                                    Storage
-                                </a>
+                        
                             </h3><!-- End .widget-title -->
 
                             <div class="collapse show" id="widget-2">
@@ -182,17 +198,18 @@ Store
                             </div><!-- End .collapse -->
                         </div><!-- End .widget -->
 
-                        <div class="widget widget-collapsible">
+                        <!-- <div class="widget widget-collapsible">
                             <h3 class="widget-title">
                                 <a data-toggle="collapse" href="#widget-3" role="button" aria-expanded="true" aria-controls="widget-3">
                                     Colour
                                 </a>
-                            </h3><!-- End .widget-title -->
+                            </h3> -->
+                            <!-- End .widget-title -->
 
-                            <div class="collapse show" id="widget-3">
-                                <div class="widget-body">
-                                    <div class="filter-colors">
-                                        <a href="#" style="background: #b87145;"><span class="sr-only">Color Name</span></a>
+                            <!-- <div class="collapse show" id="widget-3"> -->
+                                <!-- <div class="widget-body"> -->
+                                    <!-- <div class="filter-colors"> -->
+                                        <!-- <a href="#" style="background: #b87145;"><span class="sr-only">Color Name</span></a> -->
 
                                         
                                         <!-- <a href="#" style="background: #f0c04a;"><span class="sr-only">Color Name</span></a>
@@ -202,10 +219,11 @@ Store
                                         <a href="#" style="background: #669933;"><span class="sr-only">Color Name</span></a>
                                         <a href="#" style="background: #f2719c;"><span class="sr-only">Color Name</span></a>
                                         <a href="#" style="background: #ebebeb;"><span class="sr-only">Color Name</span></a> -->
-                                    </div><!-- End .filter-colors -->
-                                </div><!-- End .widget-body -->
-                            </div><!-- End .collapse -->
-                        </div><!-- End .widget -->
+                                    <!-- </div> -->
+                                    <!-- End .filter-colors -->
+                                <!-- </div>
+                            </div>
+                        </div> -->
 
                         
 
@@ -219,12 +237,22 @@ Store
                             <div class="collapse show" id="widget-5">
                                 <div class="widget-body">
                                     <div class="filter-price">
-                                        <div class="filter-price-text">
-                                            Price Range:
-                                            <span id="filter-price-range"></span>
-                                        </div><!-- End .filter-price-text -->
-
-                                        <div id="price-slider"></div><!-- End #price-slider -->
+                                        <div class="price-filter">
+                                            
+                                            <form action="{% url 'shop_by_price' %}" method="get">
+                                                {% csrf_token %}
+                                            
+                                                <label for="min-price">Min Price:</label>
+                                                <input type="number" id="min-price" name="min_price" min="0" step="10">
+                                                <label for="max-price">Max Price:</label>
+                                                <input type="number" id="max-price" name="max_price" min="0" step="10">
+                                                <button type="submit" id="filter-btn">Apply Filter</button>
+                                            </form>
+                                            
+                                        </div>
+                                        
+                                    
+                                        <!-- End #price-slider -->
                                     </div><!-- End .filter-price -->
                                 </div><!-- End .widget-body -->
                             </div><!-- End .collapse -->

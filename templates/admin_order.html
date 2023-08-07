@@ -21,6 +21,7 @@
                         
                         <th scope="col">ORDER STATUS</th>
                         <th scope="col">ORDER STATUS</th>
+                        <th scope="col">REFUND STATUS</th>
                         <!-- <th scope="col">ZIP</th>
                         <th scope="col">Status</th> -->
                     </tr>
@@ -37,7 +38,7 @@
                       
                       <td>{{ order_item.price }}</td>
                       <td>{{ order_item.order_quantity }}</td>
-                      {% endfor %}
+                      
                       
                       <td>{{ order.payment_mode }}</td>
                       <td>{{ order.status }}</td>
@@ -87,7 +88,22 @@
                     </td> 
                       <!-- <td>{{ order.zip }}</td>
                       <td>{{ order.status }}</td> -->
+                      {{ order_item.refund_status }}
+                    <td>{% if order_item.refund_status == 'intiated' %}
+
+                        <form method="post" action="{% url 'update_refund_status' order_item.order_id %}">
+                          {% csrf_token %}
+              
+                          
+                          <!-- <button type="submit">Return</button> -->
+                          <h4><button  class="btn btn-primary">Return</button></h4>
+                          
+                        </form>
+                        {% endif %}
+                      </td>
                     </tr>
+                    {% endfor %}
+
                     {% endfor %}
                   </tbody>
 

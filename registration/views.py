@@ -25,6 +25,7 @@ from django.db.models import OuterRef, Subquery
 from django.contrib import messages
 from django.shortcuts import redirect
 from .models import Account
+from userprofile.models import Wallet
 
 import random
 import string
@@ -47,6 +48,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 
 from .helpers import send_forget_password_mail
 
@@ -113,12 +115,14 @@ def verify_otp(request):
         entered_otp = request.POST.get('otp')
         saved_otp = request.session.get('otp_code')
         email = request.session.get('email')
-
+        
         if entered_otp == saved_otp:
            
             user = Account.objects.get(email=email)
+            
             user.is_active = True
             user.save()
+            wallet = Wallet.objects.create(user = user, balance = 0 )
 
             
 
@@ -240,6 +244,13 @@ def shop(request):
     categories = Category.objects.all()
     # variants = Variant.objects.filter(is_listed=True)
     variants = Variant.objects.filter(is_listed=True)
+    
+    items_per_page = 12
+    paginator = Paginator(variants, items_per_page)
+
+    page_number = request.GET.get('page')  # Get the current page number from the URL parameter
+    page_obj = paginator.get_page(page_number) 
+
 
     if request.user.is_authenticated:
         user = request.user
@@ -276,7 +287,7 @@ def shop(request):
     #     variant.variant_id = variant.uid
 
     context = {
-        'variants': variants,
+        'variants': page_obj,
         'categories':categories,
         'cart': cart,
         'cart_items': cart_items,
@@ -338,6 +349,59 @@ def shop_by_category(request, category_name):
 
 
 
+from django.db.models import Q
+
+def shop_by_price(request):
+    categories = Category.objects.all()
+
+
+    # Filter products by category
+    products = Product.objects.all()
+    variants = Variant.objects.filter(product__in=products)
+    # Price filtering
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price and max_price:
+        
+        variants = variants.filter(price__gte=min_price, price__lte=max_price)
+
+    
+
+    # Get variants for filtered products
+    
+
+    if request.user.is_authenticated:
+        user = request.user
+        is_guest_user = False
+        carts = Cart.objects.filter(user=user)
+
+        if carts.exists():
+            cart = carts.first()
+        else:
+            cart = Cart.objects.create(user=user)
+
+        cart_items = Cartitems.objects.filter(cart=cart)
+    else:
+        user = AnonymousUser()
+        is_guest_user = True
+        guest_user_id = request.session.get('guest_user_id')
+        if not guest_user_id:
+            guest_user_id = generate_unique_id()
+            request.session['guest_user_id'] = guest_user_id
+        try:
+            guest_user = Account.objects.get(email='', is_guest=True)
+        except Account.DoesNotExist:
+            guest_user = Account.objects.create(email='', is_guest=True)
+        cart = None
+        cart_items = None
+
+    context = {
+        'categories': categories,
+        'variants': variants,
+        'cart': cart,
+        'cart_items': cart_items,
+    }
+    return render(request, 'store.html', context)
 
 
 

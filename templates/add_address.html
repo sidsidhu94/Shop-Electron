@@ -3,13 +3,14 @@
 {% block content %}
 
 <div class="col-lg-9">
-    <form action="your_action_url">
+    <form method="post" action="{% url 'create_address' %}">
+        {% csrf_token %}
      
-    <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+    <h2 class="checkout-title">ADDRESS</h2><!-- End .checkout-title -->
         <div class="row">
             <div class="col-sm-6" >
                 <label>Name *</label>
-                <input type="text" class="form-control"  name = "name" required>
+                <input type="text" class="form-control"  name = "fullname" id="name" required>
             </div><!-- End .col-sm-6 -->
 
             <!-- <div class="col-sm-6">
@@ -21,52 +22,58 @@
         <!-- <label>Company Name (Optional)</label>
         <input type="text" class="form-control"> -->
 
-        <label>Country *</label>
-        <input type="text" class="form-control" required>
+        
 
-        <label>Street address *</label>
-        <input type="text" class="form-control" placeholder="House number and Street name" required>
-        <input type="text" class="form-control" placeholder="Appartments, suite, unit etc ..." required>
+        <label>address *</label>
+        <input type="text" class="form-control" name="address" placeholder="address" id="address" required>
+
 
         <div class="row">
             <div class="col-sm-6">
-                <label>Town / City *</label>
-                <input type="text" class="form-control" name ='' required>
+                <label> District*</label>
+                <input type="text" class="form-control" name ="district" id="district" required>
             </div><!-- End .col-sm-6 -->
 
             <div class="col-sm-6">
-                <label>State / County *</label>
-                <input type="text" class="form-control" required>
+                <label>State  *</label>
+                <input type="text" name="state" id="state" class="form-control" required>
             </div><!-- End .col-sm-6 -->
         </div><!-- End .row -->
 
         <div class="row">
             <div class="col-sm-6">
-                <label>Postcode / ZIP *</label>
-                <input type="text" class="form-control" required>
+                <label>Pincode *</label>
+                <input type="text" name="pincode"  id="pincode" class="form-control" required>
             </div><!-- End .col-sm-6 -->
 
             <div class="col-sm-6">
                 <label>Phone *</label>
-                <input type="tel" class="form-control" name = 'mobile_number' required>
+                <input type="tel" class="form-control" name = 'mobile' id="mobile" required>
             </div><!-- End .col-sm-6 -->
         </div><!-- End .row -->
 
-        <label>Email address *</label>
-        <input type="email" class="form-control" name = 'email' required>
+        <!-- <label>Email address *</label>
+        <input type="email" class="form-control" name = 'email' required> -->
 
-        <div class="custom-control custom-checkbox">
+        <!-- <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="checkout-create-acc">
             <label class="custom-control-label" for="checkout-create-acc">Create an account?</label>
-        </div><!-- End .custom-checkbox -->
+        </div>
 
         <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="checkout-diff-address">
             <label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
-        </div><!-- End .custom-checkbox -->
+        </div> -->
 
-        <label>Order notes (optional)</label>
-        <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+            <div class="col-lg-4">
+            
+                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                    <span class="btn-text">Add Address</span>
+                    <span class="btn-hover-text">Add new Address</span>
+                </button>
+           
+        </div>
+
     </form>
 </div><!-- End .col-lg-9 -->
 {% endblock %}

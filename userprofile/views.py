@@ -14,9 +14,11 @@ from .models import Address
 def profile(request):
     user_id = request.user.id
     addresses = Address.objects.filter(user_id=user_id)
-
+    wallet = Wallet.objects.get(user_id = user_id)
+   
     context = {
-        'addresses': addresses
+        'addresses': addresses,
+        'wallet' :wallet,
     }
     return render(request, 'profile.html', context)
 
@@ -43,6 +45,12 @@ def create_address(request):
                           )
         address.save()
         
-        return redirect('profile')  
+        return redirect('checkout')  
     
-    return render(request, 'profile.html')
+    return render(request, 'add_address.html')
+
+def delete_address2(request,id):
+    address = Address.objects.get(id=id)
+    address.delete()
+    return redirect('checkout') 
+
