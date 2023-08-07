@@ -148,10 +148,12 @@ def placeorder(request):
             cart.coupon = None
             cart.save()
 
-       
-        return redirect('home')
+        return render(request,'successpage.html')
+        # return redirect('home')
+      
+    return render(request,'successpage.html')
 
-    return redirect('home')
+    # return redirect('home')
 
 
 
