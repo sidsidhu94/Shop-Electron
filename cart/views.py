@@ -14,15 +14,16 @@ import json
 
 def cart(request):
     user = request.user
-    cart = Cart.objects.filter(user = user)
+    cart = Cart.objects.get(user = user,is_paid=False)
     print(user,"##################################################superuser.....")
-    if not cart.exists():
+    print(cart)
+    if not cart:
         # Handle the case when no carts are found for the user.
         # For example, you might want to create a new cart for the user here.
         cart = Cart.objects.create(user=user)
         print(cart,'else block')
     else:
-        cart = cart.first()
+        cart = cart
         print(cart,"#333333333")
 
     cart_items = Cartitems.objects.filter(cart = cart)
