@@ -31,7 +31,7 @@
                         <div class="product-gallery">
                             <figure class="product-main-image">
                                 
-                                <img id="product-zoom" src="{{ details.variantimages.first.image.url }}" data-zoom-image="{{ details.variantimages.image.url }}" alt="product image">
+                                <img id="product-zoom" src="{{ details.variantimages.first.image.url }}" style="width: 550px; height: 450px;" data-zoom-image="{{ details.variantimages.image.url }}" alt="product image">
 
                                 <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                     <i class="icon-arrows"></i>
@@ -39,7 +39,7 @@
                             </figure><!-- End .product-main-image -->
                             <div id="product-zoom-gallery" class="product-image-gallery">
                                 {% for img in details.variantimages.all  %}
-                                <a class="product-gallery-item" href="" data-image="{{ img.image.url }}" data-zoom-image="{{ img.image.url }}">
+                                <a class="product-gallery-item" href="" data-image="{{ img.image.url }}" data-zoom-image="{{ img.image.url }}" >
                                     <img src="{{ img.image.url }}" alt="product side">
                                 </a>
                                 {% endfor %}
@@ -108,7 +108,7 @@
                                 <a href="{% url 'add_to_cart' details.uid %}" class="btn-product btn-cart"><span>add to cart</span></a>
 
                                 <div class="details-action-wrapper">
-                                    <a href="{% url 'wishlist' %}" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                    <a href="{% url 'add_to_wishlist' details.uid %}" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
                                     <!-- <a href="#" class="btn-product btn-compare" title="Compare"><span>Add to Compare</span></a> -->
                                 </div><!-- End .details-action-wrapper -->
                             </div><!-- End .product-details-action -->

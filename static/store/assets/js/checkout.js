@@ -25,7 +25,7 @@ $(document).ready(function () {
                         "order_id": "",
                         "handler": function (responsepay) {
                             alert(responsepay.razorpay_payment_id);
-
+                            
                             var data = {
                                 "selection": selectedAddressId,
                                 "payment_mode": "Razorpay",
@@ -40,7 +40,11 @@ $(document).ready(function () {
                                 url: "/checkout/placeorder/",
                                 data: data,
                                 success: function (responsec) {
-                                    swal("Congratulations!", responsec.status, "success");
+                                    console.log("this my")
+                                    swal("Congratulations!", responsec.status, "success").then(function() {
+                                        window.location.href = '/checkout/successpage/';  // Replace with the actual URL of your success page
+                                    });
+                                
                                 }
                             });
                         },

@@ -36,18 +36,21 @@ def wishlist(request):
 
 
 def add_to_wishlist(request, variant_id):
-    variant = Variant.objects.get(uid=variant_id)
-    user = request.user
-    wishlist, created = Wishlist.objects.get_or_create(user=user)
+    if request.user.is_authenticated:
+        variant = Variant.objects.get(uid=variant_id)
+        user = request.user
+        wishlist, created = Wishlist.objects.get_or_create(user=user)
 
-    wishlist_item = WishlistItem.objects.filter(wishlist=wishlist, variant=variant)
+        wishlist_item = WishlistItem.objects.filter(wishlist=wishlist, variant=variant)
 
-    if wishlist_item.exists():
-        messages.info(request, 'This product already exists in your wishlist.')
+        if wishlist_item.exists():
+            messages.info(request, 'This product already exists in your wishlist.')
+        else:
+            wishlist_item = WishlistItem.objects.create(wishlist=wishlist, variant=variant)
+
+        return redirect('shop')
     else:
-        wishlist_item = WishlistItem.objects.create(wishlist=wishlist, variant=variant)
-
-    return redirect('shop')
+        return redirect('login_view')
 
 
 def remove_wishlist(request, variant_id):

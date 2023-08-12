@@ -117,7 +117,8 @@ def placeorder(request):
                 # orderitem.save()
                 
                 
-                item.delete()  # Remove the item from the cart
+                item.delete()
+                # cart.delete()  # Remove the item from the cart
             else:
                   # Remove the item from the cart
                 
@@ -129,12 +130,14 @@ def placeorder(request):
             return redirect('cart')  # Redirect back to the cart page if any item is out of stock
 
         messages.success(request, "Your order has been placed.")
+        print("you order is sucessfull vvvvvjvhjvjhvjvhjvjvjv")
 
         payMode = request.POST.get('payment_mode')
-        if payMode == "Razorpay":
-            return JsonResponse({'status': 'Your order has been placed successfully'})
-        elif payMode == "COD":
-            return JsonResponse({'status': 'Your order has been placed successfully'})
+        print(payMode)
+        # if payMode == "Razorpay":
+        #     return JsonResponse({'status': 'Your order has been placed successfully'})
+        # elif payMode == "COD":
+        #     return JsonResponse({'status': 'Your order has been placed successfully'})
 
 
 
@@ -147,14 +150,14 @@ def placeorder(request):
 
             cart.coupon = None
             cart.save()
-
-        return render(request,'successpage.html')
-        # return redirect('home')
+        
+ 
+        # return render(request,'successpage.html')
+        return redirect('successpage')
       
     return render(request,'successpage.html')
 
-    # return redirect('home')
-
+    # return rect('home')
 
 
 
@@ -166,6 +169,9 @@ def razorpaycheck(request):
     return JsonResponse({
         'total_price' : total_price
     })
+
+def successpage(request):
+    return render(request, "'successpage.html'")
 
 def orders(request):
     orders = Order.objects.filter(user = request.user) 

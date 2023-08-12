@@ -15,6 +15,7 @@ urlpatterns = [
     path('add_address/',views.add_address, name ='add_address'),
 
     path('proceed_to_pay/', razorpaycheck, name='proceed_to_pay'),
+    path('successpage/',views.successpage, name = "successpage"),
     
     path('orders/', views.orders, name='orders'),
     path('order_details/<int:order_id>', views.order_details, name='order_details'),

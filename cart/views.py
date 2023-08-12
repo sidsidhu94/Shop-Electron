@@ -14,29 +14,25 @@ import json
 
 def cart(request):
     user = request.user
-    cart = Cart.objects.get(user = user,is_paid=False)
-    print(user,"##################################################superuser.....")
-    print(cart)
-    if not cart:
-        # Handle the case when no carts are found for the user.
-        # For example, you might want to create a new cart for the user here.
-        cart = Cart.objects.create(user=user)
-        print(cart,'else block')
-    else:
-        cart = cart
-        print(cart,"#333333333")
+    try:
+        cart = Cart.objects.get(user = user)
+    #     cart = Cart.objectget(user=user,is_paid = False)
+    # except Cart.DoesNotExist:
+    #     cart = Cart.objects.create(user=user)
+    
 
-    cart_items = Cartitems.objects.filter(cart = cart)
-    print(cart)
-    subtotal = 0
-    total = 0
+        cart_items = Cartitems.objects.filter(cart = cart)
+        print(cart)
+        subtotal = 0
+        total = 0
 
-    for cart_item in cart_items:
-        subtotal += cart_item.variant.price * cart_item.variant_quantity
+        for cart_item in cart_items:
+            subtotal += cart_item.variant.price * cart_item.variant_quantity
         
-    total += subtotal
+            total += subtotal
 
-    context = {
+
+        context = {
         'cart' : cart,
         'cartitems': cart_items,
         'subtotal': subtotal,
@@ -44,58 +40,67 @@ def cart(request):
         }
 
     
-    if request.method == "POST":
-        coupon = request.POST.get('coupon')
+        if request.method == "POST":
+            coupon = request.POST.get('coupon')
 
 
-        try:
-            coupon_obj = Coupon.objects.get(coupon_code = coupon)
-            coupon_used = Order.objects.filter(Q(user = user) & Q(coupon = coupon))
-            print(coupon_used)
+            try:
+                coupon_obj = Coupon.objects.get(coupon_code = coupon)
+                coupon_used = Order.objects.filter(Q(user = user) & Q(coupon = coupon))
+                print(coupon_used)
+                
+                print(coupon_obj,"################################################################################")
+
+                if not coupon_obj:
+                    messages.warning(request,"Invalid Coupon")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+                if coupon_used :
+                    messages.warning(request, 'Coupon has already been used')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             
-            print(coupon_obj,"################################################################################")
+                if cart.coupon:
+                    messages.warning(request, 'Coupon already applied.')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            
 
-            if not coupon_obj:
-                messages.warning(request,"Invalid Coupon")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                if cart.cart_total < coupon_obj.minimum_amount:
+                    messages.warning(request, f'Amount should be greater than {coupon_obj.minimum_amount}.')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-            if coupon_used :
-                messages.warning(request, 'Coupon has already been used')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                if coupon_obj.is_expired:
+                    messages.warning(request, 'Coupon has expired.')
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+                cart.coupon = coupon_obj
+                cart.save()
+                messages.success(request, 'Coupon Applied')
+            
+            except:
+                coupon_obj = None
         
-            if cart.coupon:
-                messages.warning(request, 'Coupon already applied.')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
-
-            if cart.cart_total < coupon_obj.minimum_amount:
-                messages.warning(request, f'Amount should be greater than {coupon_obj.minimum_amount}.')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-            if coupon_obj.is_expired:
-                messages.warning(request, 'Coupon has expired.')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-            cart.coupon = coupon_obj
-            cart.save()
-            messages.success(request, 'Coupon Applied')
-        
-        except:
-            coupon_obj = None
+        return render(request, 'cart.html', context)
+    except:
+        pass
 
 
 
-    return render(request, 'cart.html', context)
+    #return render(request, 'cart.html', context)
 
 
 def add_to_cart(request, variant_id):
     
-    
-    
+        
     if request.user.is_authenticated:
         variant = Variant.objects.get(uid=variant_id)
         user = request.user
-        cart, created = Cart.objects.get_or_create(user=user, is_paid=False)
+        # cart, created = Cart.objects.get_or_create(user=user, is_paid=False)
+        try:
+            cart = Cart.objects.get(user=user)
+            print(cart,"here printing cart you will  ")
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(user=user)
+
         print(cart,"######################################################3")
         
         # Retrieve all matching Cartitems objects
